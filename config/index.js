@@ -10,14 +10,6 @@ const config = {
   host : process.env.HOST || 'localhost'
 }
 
-config.paths = {
-  base : BASE,
-  src  : `${BASE}/src`,
-  app  : `${BASE}/src/client`,
-  server: `${BASE}/src/server`,
-  dist : `${BASE}/dist`,
-}
-
 config.globals = {
   'process.env': {
     'NODE_ENV': JSON.stringify(config.env)
