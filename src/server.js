@@ -1,24 +1,17 @@
 import chalk from 'chalk'
-import mongoose from 'mongoose'
+import express from 'express'
 import passport from 'passport'
-import socketIo from 'socket.io'
-
-import config from '../config'
-
-// Passport auth
-import login from './modules/user/login'
-import register from './modules/user/register'
 
 // Routes
-import userRoutes from './modules/user/routes'
+import auth from './modules/auth/routes'
 
 const server = (app) => {
 
-  // Setup Mongo
-  console.log(chalk.yellow('[mongo] Initializing mongo...'))
+  const router = express.Router()
 
-  mongoose.Promise = global.Promise
-  mongoose.connect(config.db.url)
+  router.get('/', function(req, res) {
+    res.json({ message: 'hooray! welcome to our api!' })   
+  })
 
   // Setup Passport
   console.log(chalk.yellow('[passport] Initializing passport...'))
@@ -26,13 +19,12 @@ const server = (app) => {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  passport.use('local-login', login)
-  passport.use('local-signup', register)
-
   // Setup Routes
-  console.log(chalk.yellow('[express] Initializing api routes...'))
+  console.log(chalk.yellow('[express] Initializing auth routes...'))
 
-  userRoutes(app, passport)
+  auth(router, passport)
+
+  app.use('/', router)
 
 }
 
