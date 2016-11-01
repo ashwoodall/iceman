@@ -1,9 +1,10 @@
-DROP TABLE IF EXISTS users;
-CREATE TABLE users(
+DROP TABLE IF EXISTS ohhi_user;
+CREATE TABLE ohhi_user(
   id                SERIAL PRIMARY KEY,
   fist_name         VARCHAR(255),
   last_name         VARCHAR(255),
   email             VARCHAR(255) UNIQUE,
+  password          VARCHAR(255) UNIQUE,
   age               VARCHAR(255),
   hometown          VARCHAR(255),
   profile_picture   VARCHAR(255),

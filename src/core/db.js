@@ -1,12 +1,13 @@
-import chalk from 'chalk'
-import pg from 'pg'
+import bluebird from 'bluebird'
+import pg from 'pg-promise'
 
 import config from '../../config'
 
-const pool = new pg.Pool(config.db)
+const options = {
+  promiseLib: bluebird
+}
 
-pool.on('error', (error, client) => {
-  console.log(chalk.red(`[postgress] ${error.message}`))
-})
+const pgp = pg(options)
+const db = pgp(config.db)
 
-export default pool
+export default db

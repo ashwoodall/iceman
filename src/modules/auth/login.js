@@ -1,19 +1,43 @@
-import { BasicStrategy } from 'passport-http'
+import Promise from 'bluebird'
+import { compare } from 'bcrypt'
 
-import pool from '../../core/db'
+import db from '../../core/db'
 
-const login = (email, password) => {
-  return pool.connect().then((error, client, done) => {
-    if (error) return console.log('Cannot connect to db', JSON.stringify(error))
+const bcryptCompare = Promise.promisify(compare)
 
-    client.query('SELECT email, password from users where email=$1', [email], (error, result) => {
-      done()
+const comparePasswords = (password, hash) => {
+  return bcryptCompare(password, hash)
+    .then(match => match)
+    .catch(error => { throw error })
+}
 
-      if (error) return console.log('Cannot run query', error)
+const login = (req, res, next) => {
+  let userInfo = null
 
-      return console.log(result)
+  const { email, password } = req.body
+
+  db.one('SELECT email, password from ohhi_user where email=$1', [email])
+    .then(user => {
+      userInfo = user
+      return comparePasswords(password, user.password)
     })
-  })
+    .then(match => {
+      if (!match) {
+        res.status(400).json({
+          message: 'Password is incorrect!',
+          state: 'failure'
+        })
+      } else {
+        res.status(200).json({
+          data: userInfo.email,
+          message: 'User found!',
+          status: 'success'
+        })
+      }
+    })
+    .catch(error => {
+      return next(error)
+    })
 }
 
 

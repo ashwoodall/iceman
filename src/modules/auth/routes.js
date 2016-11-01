@@ -1,6 +1,7 @@
 import { BasicStrategy } from 'passport-http'
 
 import login from './login'
+import register from './register'
 
 const strat = {
   usernameField: 'email', 
@@ -18,14 +19,8 @@ const routes = (app, passport) => {
       })
   }))
 
-  app.post('/auth/login', (req, res) => 
-    login(req.body.email, req.body.password).then(user => {
-      return res.status(200).send(user)
-    }).catch(error => {
-      return res.sendStatus(403)
-    })
-  )
-
+  app.post('/auth/login', login)
+  app.post('/auth/register', register)
 }
 
 export default routes

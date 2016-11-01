@@ -10,7 +10,7 @@ const server = (app) => {
   const router = express.Router()
 
   router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' })   
+    res.json({ message: 'You can be my wingman any time' })   
   })
 
   // Setup Passport
