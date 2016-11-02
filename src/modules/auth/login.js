@@ -1,5 +1,7 @@
 import Promise from 'bluebird'
 import { compare } from 'bcrypt'
+import passport from 'passport'
+import { Strategy } from 'passport-local'
 
 import db from '../../core/db'
 
@@ -11,34 +13,43 @@ const comparePasswords = (password, hash) => {
     .catch(error => { throw error })
 }
 
-const login = (req, res, next) => {
+const validateUser = (email, password, cb) => {
   let userInfo = null
 
-  const { email, password } = req.body
-
-  db.one('SELECT email, password from ohhi_user where email=$1', [email])
+  return db.one('SELECT email, password from ohhi_user where email=$1', [email])
     .then(user => {
       userInfo = user
       return comparePasswords(password, user.password)
     })
     .then(match => {
-      if (!match) {
-        res.status(400).json({
-          message: 'Password is incorrect!',
-          state: 'failure'
-        })
-      } else {
-        res.status(200).json({
-          data: userInfo.email,
-          message: 'User found!',
-          status: 'success'
-        })
-      }
+      if (!match) return cb(null, false)
+
+      return cb(null, userInfo.email)
+    })
+    .catch(error => cb(error))
+}
+
+const login = (req, res, next) => {
+  const { email, password } = req.body
+
+  validateUser(email, password, next)
+    .then(user => {
+      res.status(200).json({
+        data: email,
+        message: 'User found!',
+        status: 'success'
+      })
     })
     .catch(error => {
-      return next(error)
+      res.status(400).json({
+        message: error,
+        status: 'failure'
+      })
     })
 }
 
+const localLogin = (email, password, done) => {
+  return validateUser(email, password, done)
+}
 
-export default login
+export { login, localLogin }

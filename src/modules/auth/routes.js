@@ -1,25 +1,13 @@
-import { BasicStrategy } from 'passport-http'
+import passport from 'passport'
 
-import login from './login'
+import { login } from './login'
 import register from './register'
+import authPassport from './passport'
 
-const strat = {
-  usernameField: 'email', 
-  passwordField: 'password'
-}
+const requireLogin = passport.authenticate('local', { session: false })
 
 const routes = (app, passport) => {
-
-  passport.use(new BasicStrategy(strat, (email, password, done) => {
-    return login(email, password)
-      .then(user => done(null, user))
-      .catch(error => {
-        if (error) return done(err)
-        return done(null, false)
-      })
-  }))
-
-  app.post('/auth/login', login)
+  app.post('/auth/login', requireLogin, login)
   app.post('/auth/register', register)
 }
 

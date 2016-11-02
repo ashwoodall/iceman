@@ -1,7 +1,9 @@
 // Core
-import express from 'express'
 import bodyParser from 'body-parser'
 import chalk from 'chalk'
+import express from 'express'
+import http from 'http'
+import morgan from 'morgan'
 
 // Config
 import config from '../config'
@@ -16,11 +18,13 @@ console.log(chalk.yellow('[express] Initializing server...'))
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.set('port', config.port)
+app.use(morgan('dev'))
 
 server(app)
 
-app.listen(config.port, error => {
+const httpServer = http.createServer(app)
+
+httpServer.listen(config.port, error => {
   if (error)
     console.error(chalk.red(error))
   else
