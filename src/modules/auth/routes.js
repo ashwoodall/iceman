@@ -2,7 +2,6 @@ import passport from 'passport'
 
 import { login } from './login'
 import register from './register'
-import authPassport from './passport'
 
 const requireLogin = passport.authenticate('local', { session: false })
 

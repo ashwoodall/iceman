@@ -1,6 +1,5 @@
 import Promise from 'bluebird'
 import { compare } from 'bcrypt'
-import passport from 'passport'
 import { Strategy } from 'passport-local'
 
 import db from '../../core/db'
@@ -32,8 +31,8 @@ const validateUser = (email, password, cb) => {
 const login = (req, res, next) => {
   const { email, password } = req.body
 
-  validateUser(email, password, next)
-    .then(user => {
+  return validateUser(email, password, next)
+    .then(() => {
       res.status(200).json({
         data: email,
         message: 'User found!',

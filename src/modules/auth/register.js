@@ -10,16 +10,16 @@ const register = (req, res, next) => {
 
   return bcryptHash(password, 8)
     .then(hashedPassword => {
-      db.none('INSERT INTO ohhi_user(email, password) values($1, $2)', [email, hashedPassword])
-        .then(() => {
-          res.status(200).json({
-            message: 'User registered!',
-            status: 'success'
-          })
-        })
-        .catch(error => {
-          return next(error)
-        })
+        return db.none('INSERT INTO ohhi_user(email, password) values($1, $2)', [email, hashedPassword])
+    })
+    .then(() => {
+      res.status(200).json({
+        message: 'User registered!',
+        status: 'success'
+      })
+    })
+    .catch(error => {
+      return next(error)
     })
 }
 
