@@ -1,5 +1,10 @@
 DROP TABLE IF EXISTS ohhi_user;
-CREATE TYPE KID_STATUS AS ENUM ('noKids', 'expecting', 'hasKids');
+DO $$
+BEGIN
+IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'kid_status') THEN
+        CREATE TYPE KID_STATUS AS ENUM ('noKids', 'expecting', 'hasKids');
+END IF;
+END$$;
 CREATE TABLE ohhi_user(
   id                    SERIAL PRIMARY KEY,
   first_name            VARCHAR(100),
