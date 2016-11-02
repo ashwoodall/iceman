@@ -1,3 +1,0 @@
-DROP DATABASE IF EXISTS ohhi;
-CREATE DATABASE ohhi;
-\connect ohhi;
