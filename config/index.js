@@ -5,24 +5,17 @@ const BASE = path.resolve(__dirname, '..')
 const NODE_ENV = JSON.stringify(process.env.NODE_ENV)
 
 const config = {
-  env  : process.env.NODE_ENV || 'development',
-  port : process.env.PORT || 3000,
-  host : process.env.HOST || 'localhost'
-}
-
-config.globals = {
-  'process.env': {
-    'NODE_ENV': JSON.stringify(config.env)
-  },
-  'NODE_ENV' : config.env,
-  '__DEV__'  : config.env === 'development',
-  '__PROD__' : config.env === 'production'
+  port     : process.env.PORT || '8080',
+  host     : process.env.HOST || 'localhost',
+  secret   : process.env.SECRET || 'thisisdangerous'
 }
 
 config.db = {
-  port : process.env.PORT || 8080,
-  url: process.env.MONGO_URL || 'mongodb://localhost:27017/oh-hi'
+  user: 'postgres',
+  password: 'postgres',
+  host: 'localhost',
+  port: 5432,
+  database : 'ohhi'
 }
-
 
 export default config
