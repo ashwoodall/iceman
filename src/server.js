@@ -2,6 +2,9 @@ import chalk from 'chalk'
 import express from 'express'
 import passport from 'passport'
 
+// Pastport
+import jwtStrategy from './core/passport'
+
 // Routes
 import auth from './modules/auth/routes'
 
@@ -9,7 +12,7 @@ const server = (app) => {
 
   const router = express.Router()
 
-  router.get('/', function(req, res) {
+  router.get('/', passport.authenticate('jwt', { session: false }), function(req, res) {
     res.send('You can be my wingman any time')
   })
 
@@ -18,6 +21,8 @@ const server = (app) => {
 
   app.use(passport.initialize())
   app.use(passport.session())
+
+  jwtStrategy(passport)
 
   // Setup Routes
   console.log(chalk.yellow('[express] Initializing auth routes...'))

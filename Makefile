@@ -3,6 +3,7 @@ DB := ohhi
 MAKE ?= make
 NPM ?= npm
 OSTYPE := $(shell uname)
+POSTGRES ?= postgres
 PSQL ?= psql
 USER := postgres
 PASSWORD := postgres
@@ -72,5 +73,7 @@ setup-db:
 start:
 
 	@echo "Starting Server"
+	$(BREW) services start postgres
 	$(NPM) start
+
 

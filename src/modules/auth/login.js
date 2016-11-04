@@ -1,7 +1,8 @@
 import Promise from 'bluebird'
 import { compare } from 'bcrypt'
-import { Strategy } from 'passport-local'
+import jwt from 'jsonwebtoken'
 
+import config from '../../../config'
 import db from '../../core/db'
 
 const bcryptCompare = Promise.promisify(compare)
@@ -12,43 +13,33 @@ const comparePasswords = (password, hash) => {
     .catch(error => { throw error })
 }
 
-const validateUser = (email, password, cb) => {
-  let userInfo = null
-
-  return db.one('SELECT email, password from ohhi_user where email=$1', [email])
-    .then(user => {
-      userInfo = user
-      return comparePasswords(password, user.password)
-    })
-    .then(match => {
-      if (!match) return cb(null, false)
-
-      return cb(null, userInfo.email)
-    })
-    .catch(error => cb(error))
+const generateJwt = (id) => {
+ return jwt.sign(id, config.secret)
 }
 
 const login = (req, res, next) => {
+  let userInfo = null
+
   const { email, password } = req.body
 
-  return validateUser(email, password, next)
-    .then(() => {
-      res.status(200).json({
-        data: email,
-        message: 'User found!',
-        status: 'success'
-      })
+  db.one('SELECT email, id, password from ohhi_user where email=$1', [email])
+    .then(user => {
+      userInfo = user
+
+      return comparePasswords(password, user.password)
+    })
+    .then(match => {
+      if (!match) {
+        res.status(401).json({ message: 'Authentication failed! Password is incorrect.', success: false })
+      } else {
+        res.status(200).json({ message: 'Authentication successful!', success: true, token: `JWT ${generateJwt(userInfo.id)}` })
+      }
     })
     .catch(error => {
-      res.status(400).json({
-        message: error,
-        status: 'failure'
-      })
+      res.status(400).json({ success: false, message: 'Authentication failed!' })
+
+      return next(error)
     })
 }
 
-const localLogin = (email, password, done) => {
-  return validateUser(email, password, done)
-}
-
-export { login, localLogin }
+export default login
