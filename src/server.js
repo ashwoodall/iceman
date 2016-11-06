@@ -7,6 +7,7 @@ import jwtStrategy from './core/passport'
 
 // Routes
 import auth from './modules/auth/routes'
+import user from './modules/user/routes'
 
 const server = (app) => {
 
@@ -28,6 +29,7 @@ const server = (app) => {
   console.log(chalk.yellow('[express] Initializing auth routes...'))
 
   auth(router, passport)
+  user(router, passport)
 
   app.use('/', router)
 
