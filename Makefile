@@ -70,6 +70,8 @@ setup-db:
 	$(PSQL) $(DB) -f src/modules/kids_age/kids_age.sql
 	$(PSQL) $(DB) -f src/modules/user-kids_age/user-kids_age.sql
 	$(PSQL) $(DB) -f src/modules/reference/reference.sql
+	$(PSQL) $(DB) -f src/modules/conversation/conversation.sql
+	$(PSQL) $(DB) -f src/modules/message/message.sql
 
 	@echo "Granting privileges"
 	$(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $(USER);"
