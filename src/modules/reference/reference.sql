@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS ohhi_reference;
+DROP TABLE IF EXISTS ohhi_reference CASCADE;
 CREATE TABLE ohhi_reference(
   id            SERIAL PRIMARY KEY,
   author        INTEGER REFERENCES ohhi_user (id),

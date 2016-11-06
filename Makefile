@@ -64,7 +64,12 @@ setup-db:
 	fi
 
 	@echo "Adding Tables"
-	$(PSQL) $(DB) -f src/modules/user/schema.sql
+	$(PSQL) $(DB) -f src/modules/user/user.sql
+	$(PSQL) $(DB) -f src/modules/activity/activity.sql
+	$(PSQL) $(DB) -f src/modules/user-activity/user-activity.sql
+	$(PSQL) $(DB) -f src/modules/kids_age/kids_age.sql
+	$(PSQL) $(DB) -f src/modules/user-kids_age/user-kids_age.sql
+	$(PSQL) $(DB) -f src/modules/reference/reference.sql
 
 	@echo "Granting privileges"
 	$(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $(USER);"

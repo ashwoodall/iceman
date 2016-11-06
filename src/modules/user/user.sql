@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS ohhi_user;
+DROP TABLE IF EXISTS ohhi_user CASCADE;
 DO $$
 BEGIN
 IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'kid_status') THEN
