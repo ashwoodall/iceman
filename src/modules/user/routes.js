@@ -1,9 +1,9 @@
 import getUser from './getUser'
-import saveUser from './saveUser'
+import updateUser from './updateUser'
 
 const routes = (app, passport) => {
   app.get('/user/:userId', passport.authenticate('jwt', { session: false }), getUser)
-  app.post('/user/:userId', passport.authenticate('jwt', { session: false }), saveUser)
+  app.put('/user/:userId', passport.authenticate('jwt', { session: false }), updateUser)
 }
 
 export default routes
