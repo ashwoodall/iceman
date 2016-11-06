@@ -5,7 +5,7 @@ const routes = (app, passport) => {
   app.post('/auth/login', login)
   app.post('/auth/register', register)
 
-  // This is a tesst route for jwt authentication
+  // This is a test route for jwt authentication
   app.get('/auth/test', passport.authenticate('jwt', { session: false }), (req, res) => {  
     res.send(`User is authenticated! User ID: ${req.user.id}.`);
   })
