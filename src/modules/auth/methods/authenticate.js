@@ -2,8 +2,8 @@ import Promise from 'bluebird'
 import { compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-import config from '../../../config'
-import db from '../../core/db'
+import config from '../../../../config'
+import db from '../../../core/db'
 
 const bcryptCompare = Promise.promisify(compare)
 
@@ -34,7 +34,7 @@ const login = (req, res, next) => {
       } else {
         delete userInfo.password
         
-        res.status(200).json({ message: 'Authentication successful!', success: true, token: `JWT ${generateJwt(userInfo.id)}`, user: userInfo })
+        res.status(200).json({ message: 'Authentication successful!', success: true, token: `JWT ${generateJwt(userInfo.id)}`, data: userInfo })
       }
     })
     .catch(error => {

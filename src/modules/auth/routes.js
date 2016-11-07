@@ -1,14 +1,8 @@
-import login from './login'
-import register from './register'
+import { authenticate, register } from './methods'
 
 const routes = (app, passport) => {
-  app.post('/auth/login', login)
+  app.post('/auth/login', authenticate)
   app.post('/auth/register', register)
-
-  // This is a test route for jwt authentication
-  app.get('/auth/test', passport.authenticate('jwt', { session: false }), (req, res) => {  
-    res.send(`User is authenticated! User ID: ${req.user.id}.`);
-  })
 }
 
 export default routes

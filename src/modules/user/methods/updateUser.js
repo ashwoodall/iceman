@@ -1,7 +1,7 @@
-import config from '../../../config'
-import db from '../../core/db'
+import config from '../../../../config'
+import db from '../../../core/db'
 
-const saveUser = (req, res, next) => {
+const updateUser = (req, res, next) => {
   const { userId } = req.params
   const { 
     first_name,
@@ -43,7 +43,7 @@ const saveUser = (req, res, next) => {
   .then(user => {
     delete user.password
 
-    res.status(200).json({ message: 'User updated successfully!', success: true, user: user })
+    res.status(200).json({ message: 'User updated successfully!', success: true, data: user })
   })
   .catch(error => {
     res.status(400).json({ success: false, message: 'Cannot update user information!' })
@@ -52,4 +52,4 @@ const saveUser = (req, res, next) => {
   })
 }
 
-export default saveUser
+export default updateUser

@@ -1,7 +1,7 @@
-import config from '../../../config'
-import db from '../../core/db'
+import config from '../../../../config'
+import db from '../../../core/db'
 
-const disabledUser = (req, res, next) => {
+const disableUser = (req, res, next) => {
   const { userId } = req.params
 
   db.one('UPDATE ohhi_user SET disabled=$1 WHERE ID=$2 RETURNING id', [true, userId])
@@ -13,4 +13,4 @@ const disabledUser = (req, res, next) => {
     })
 }
 
-export default disabledUser
+export default disableUser

@@ -1,5 +1,5 @@
-import config from '../../../config'
-import db from '../../core/db'
+import config from '../../../../config'
+import db from '../../../core/db'
 
 const deleteUser = (req, res, next) => {
   const { userId } = req.params
