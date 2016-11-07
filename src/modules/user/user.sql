@@ -26,7 +26,8 @@ CREATE TABLE ohhi_user(
   facebook              VARCHAR(255),
   twitter               VARCHAR(255),
   instagram             VARCHAR(255),
-  pinterest             VARCHAR(255)
+  pinterest             VARCHAR(255),
+  disabled              BOOLEAN
 );
 
 --kids_age and activities should probably be separate tables that are linked to this table by foreign key
