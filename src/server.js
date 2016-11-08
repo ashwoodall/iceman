@@ -9,6 +9,7 @@ import jwtStrategy from './core/passport'
 import auth from './modules/auth/routes'
 import conversation from './modules/conversation/routes'
 import user from './modules/user/routes'
+import reference from './modules/reference/routes'
 
 const server = (app) => {
 
@@ -31,6 +32,7 @@ const server = (app) => {
 
   auth(router, passport)
   conversation(router, passport)
+  reference(router, passport)
   user(router, passport)
 
   app.use('/', router)
