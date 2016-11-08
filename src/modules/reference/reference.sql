@@ -9,3 +9,4 @@ CREATE TABLE ohhi_reference(
   isPublished   BOOLEAN DEFAULT FALSE,
   timestamp     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
