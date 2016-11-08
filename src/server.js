@@ -8,8 +8,8 @@ import jwtStrategy from './core/passport'
 // Routes
 import auth from './modules/auth/routes'
 import conversation from './modules/conversation/routes'
-import user from './modules/user/routes'
 import reference from './modules/reference/routes'
+import user from './modules/user/routes'
 
 const server = (app) => {
 
