@@ -1,3 +1,4 @@
 export createConversation from './createConversation'
 export deleteConversation from './deleteConversation'
-export getByRecipient from './getByRecipient'
+export getAllConversations from './getAllConversations'
+export getConversation from './getConversation'
