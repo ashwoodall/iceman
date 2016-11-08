@@ -3,10 +3,10 @@ import db from '../../../core/db'
 
 const createReference = (req, res, next) => {
   const { 
-      author_id,
-      recipient_id,
-      title,
-      body } = req.body
+    author_id,
+    recipient_id,
+    title,
+    body } = req.body
 
 
   db.none('INSERT INTO ohhi_reference(author_id, recipient_id, title, body, isPublished) VALUES($1, $2, $3, $4, $5)', [author_id, recipient_id, title, body, false])
