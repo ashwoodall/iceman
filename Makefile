@@ -82,7 +82,7 @@ setup-db:
 	$(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $(USER);"
 	$(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $(USER);"
 
-setup-db-liunx:
+setup-db-linux:
 	@echo "Initializing $(DB) database"
 	@if sudo -u $(USER) $(PSQL) -lqt | cut -d \| -f 1 | grep -qw $(DB) ; then \
 		echo "Database already exists" ; \
