@@ -14,7 +14,7 @@ const server = (app) => {
 
   const router = express.Router()
 
-  router.get('/', passport.authenticate('jwt', { session: false }), function(req, res) {
+  router.get('/', (req, res) => {
     res.send('You can be my wingman any time')
   })
 

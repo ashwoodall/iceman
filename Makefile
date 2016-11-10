@@ -28,6 +28,9 @@ clean:
 install-linux:
 	@echo "Installing Linux"
 
+	sudo apt-get update
+	sudo apt-get install postgresql postgresql-contrib
+
 install-osx:
 
 	@echo "Updating brew"
