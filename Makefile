@@ -19,7 +19,7 @@ install:
 	$(MAKE) clean
 	$(MAKE) install-modules
 	$(MAKE) install-linux
-	$(MAKE) setup-linux-db
+	$(MAKE) setup-db-linux
 endif
 
 clean:
