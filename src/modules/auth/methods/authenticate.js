@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { compare } from 'bcrypt'
+import { compare } from 'bcrypt-nodejs'
 import jwt from 'jsonwebtoken'
 
 import config from '../../../../config'

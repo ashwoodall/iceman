@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { hash } from 'bcrypt'
+import { hash } from 'bcrypt-nodejs'
 
 import db from '../../../core/db'
 
