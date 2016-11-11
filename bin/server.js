@@ -4,6 +4,7 @@ import chalk from 'chalk'
 import express from 'express'
 import http from 'http'
 import morgan from 'morgan'
+import cors from 'cors'
 
 // Config
 import config from '../config'
@@ -12,6 +13,8 @@ import config from '../config'
 import server from '../src/server'
 
 const app = express()
+
+app.use(cors())
 
 // Setup server
 console.log(chalk.yellow('[express] Initializing server...'))
