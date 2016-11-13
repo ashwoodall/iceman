@@ -2,9 +2,8 @@ import config from '../../../../config'
 import db from '../../../core/db'
 import Promise from 'bluebird'
 
-
-var pgp = require('pg-promise')();
-var helpers = pgp.helpers;
+const pgp = require('pg-promise')();
+const helpers = pgp.helpers;
 
 const updateUser = (req, res, next) => {
   const { userId } = req.params;
@@ -31,7 +30,6 @@ const updateUser = (req, res, next) => {
   let junctionInsertValues;
   const agesUsersColumns = new helpers.ColumnSet(['user_id', 'kids_age_id'], {table: 'ohhi_user_kids_age'});
 
-  //what happens if no kids ages?
   const lookupKidsAges = function(){
     if (kids_ages && kids_ages.length) {
       let agesQuery = "select id from ohhi_kids_age where label in ($1^)"
@@ -74,14 +72,10 @@ const updateUser = (req, res, next) => {
             ])
           ];
 
+          const userKidsAgeInsert = t.any(helpers.insert(junctionInsertValues, agesUsersColumns) + " ON CONFLICT ON CONSTRAINT user_kids_age_pkey DO NOTHING returning *")
+
           if (kids_ages && kids_ages.length) {
-            junctionInsertValues.forEach(function(values){
-              console.log('VALUES: ', values)
-              queries.push(t.any("insert into ohhi_user_kids_age (user_id, kids_age_id) " +
-                  " select ${user_id},${kids_age_id} " +
-                  " where not exists (select 1 from ohhi_user_kids_age where user_id = ${user_id} and kids_age_id = ${kids_age_id}) RETURNING *",
-                  values));
-            })
+            queries.push(userKidsAgeInsert)
           }
 
           return t.batch(queries)
@@ -89,7 +83,10 @@ const updateUser = (req, res, next) => {
             .then(function (data) {
               console.log(data); // printing transaction result;
 
-              res.status(200).json(data)
+              res.status(200).json({ success: true, message: 'User information updated!' })
+
+              // db.query("select * from ohhi_user where id = $1 " +
+              //   " left join ohhi_user.id = ohhi_", [userId])
             })
             .catch(error => {
               console.log("ERROR:", error.message || error);
