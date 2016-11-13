@@ -112,10 +112,7 @@ const updateUser = (req, res, next) => {
 
         return t.batch(queries)
       })
-      .then((data) => {
-
-        console.log('DATA:::: ', data)
-
+      .then(() => {
         return db.query('SELECT u.*, k.kids_age_label, a.activity_label FROM ohhi_user AS u '+
                         ' LEFT JOIN ohhi_user_kids_age AS kj ON kj.user_id = u.id ' +
                         ' LEFT JOIN ohhi_kids_age AS k ON kj.kids_age_id = k.id ' +
@@ -149,8 +146,6 @@ const updateUser = (req, res, next) => {
 
       })
       .catch(error => {
-        console.log('ERROR:', error.message || error);
-
         res.status(400).json({ success: false, message: 'Cannot update user information!' })
 
         return next(error)
