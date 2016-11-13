@@ -19,8 +19,8 @@ app.use(cors())
 // Setup server
 console.log(chalk.yellow('[express] Initializing server...'))
 
-app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 
 server(app)
