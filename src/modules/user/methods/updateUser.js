@@ -32,7 +32,7 @@ const updateUser = (req, res, next) => {
   const agesUsersColumns = new helpers.ColumnSet(['user_id', 'kids_age_id'], {table: 'ohhi_user_kids_age'});
 
   //what happens if no kids ages?
-  var lookupKidsAges = function(){
+  const lookupKidsAges = function(){
     if (kids_ages && kids_ages.length) {
       let agesQuery = "select id from ohhi_kids_age where label in ($1^)"
       return db.query(agesQuery, pgp.as.csv(kids_ages))
@@ -74,20 +74,15 @@ const updateUser = (req, res, next) => {
             ])
           ];
 
-
-          // junctionInsertValues.forEach(function(values){
-          //   queries.push(t.any("insert into ohhi_user_kids_ages (user_id, kids_age_id) " +
-          //       " select (user_id, kids_age_id),$1,$2 " +
-          //       " where not exists (select * from user_location where location_id = $1 and provider_id = $2) RETURNING id",
-          //       [val, req.body.providerid]));
-          // })
-
           if (kids_ages && kids_ages.length) {
-            const userKidsAgeInsert = t.any(helpers.insert(junctionInsertValues, agesUsersColumns) + " ON CONFLICT DO NOTHING returning *")
-            queries.push(userKidsAgeInsert)
+            junctionInsertValues.forEach(function(values){
+              console.log('VALUES: ', values)
+              queries.push(t.any("insert into ohhi_user_kids_age (user_id, kids_age_id) " +
+                  " select ${user_id},${kids_age_id} " +
+                  " where not exists (select 1 from ohhi_user_kids_age where user_id = ${user_id} and kids_age_id = ${kids_age_id}) RETURNING *",
+                  values));
+            })
           }
-
-          //If there are kids ages in the request body, look up their primary keys in the kids_ages table so that userId and kids_ageId can then be added to the user/age junction table
 
           return t.batch(queries)
         })
