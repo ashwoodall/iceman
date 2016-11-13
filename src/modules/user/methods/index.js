@@ -1,4 +1,5 @@
 export deleteUser from './deleteUser'
 export disableUser from './disableUser'
 export getById from './getById'
+export getByToken from './getByToken'
 export updateUser from './updateUser'
