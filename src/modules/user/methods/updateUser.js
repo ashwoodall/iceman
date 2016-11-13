@@ -2,8 +2,9 @@ import config from '../../../../config'
 import db from '../../../core/db'
 import Promise from 'bluebird'
 
-var pgp = require('pg-promise')(/*initialization options*/);
-var helpers = pgp.helpers; // `helpers` namespace
+
+var pgp = require('pg-promise')();
+var helpers = pgp.helpers;
 
 const updateUser = (req, res, next) => {
   const { userId } = req.params;
@@ -30,6 +31,7 @@ const updateUser = (req, res, next) => {
   let junctionInsertValues;
   const agesUsersColumns = new helpers.ColumnSet(['user_id', 'kids_age_id'], {table: 'ohhi_user_kids_age'});
 
+  //what happens if no kids ages?
   var lookupKidsAges = function(){
     if (kids_ages && kids_ages.length) {
       let agesQuery = "select id from ohhi_kids_age where label in ($1^)"
@@ -44,12 +46,11 @@ const updateUser = (req, res, next) => {
           })
     }
   }
-
-  return lookupKidsAges()
+  return Promise
+      .resolve()
+      .then(lookupKidsAges)
       .then(function(){
         db.tx(function (t) {
-
-          var t = this;
 
           const queries = [
             t.one(`UPDATE ohhi_user SET first_name=$1, last_name=$2, birth_date=$3, hometown=$4, profile_picture=$5, introduction=$6, has_kids=$7, has_pets=$8, number_of_kids=$9, about_pets=$10, is_service_member=$11, current_station=$12, facebook=$13, twitter=$14, instagram=$15, pinterest=$16 WHERE id=$17 RETURNING *`, [
@@ -73,9 +74,16 @@ const updateUser = (req, res, next) => {
             ])
           ];
 
-          const userKidsAgeInsert = t.any(helpers.insert(junctionInsertValues, agesUsersColumns) + " ON CONFLICT DO NOTHING returning *")
+
+          // junctionInsertValues.forEach(function(values){
+          //   queries.push(t.any("insert into ohhi_user_kids_ages (user_id, kids_age_id) " +
+          //       " select (user_id, kids_age_id),$1,$2 " +
+          //       " where not exists (select * from user_location where location_id = $1 and provider_id = $2) RETURNING id",
+          //       [val, req.body.providerid]));
+          // })
 
           if (kids_ages && kids_ages.length) {
+            const userKidsAgeInsert = t.any(helpers.insert(junctionInsertValues, agesUsersColumns) + " ON CONFLICT DO NOTHING returning *")
             queries.push(userKidsAgeInsert)
           }
 
