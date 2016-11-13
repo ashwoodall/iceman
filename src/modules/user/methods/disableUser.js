@@ -1,4 +1,3 @@
-import config from '../../../../config'
 import db from '../../../core/db'
 
 const disableUser = (req, res, next) => {

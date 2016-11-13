@@ -1,4 +1,3 @@
-import config from '../../../../config'
 import db from '../../../core/db'
 import Promise from 'bluebird'
 
@@ -27,16 +26,33 @@ const updateUser = (req, res, next) => {
     kids_ages,
     activities
   } = req.body;
-  let junctionInsertValues;
-  const agesUsersColumns = new helpers.ColumnSet(['user_id', 'kids_age_id'], {table: 'ohhi_user_kids_age'});
+  let kidsAgeJunctionInsertValues;
+  let activityJunctionInsertValues;
+  const agesUsersColumns       = new helpers.ColumnSet(['user_id', 'kids_age_id'], {table: 'ohhi_user_kids_age'});
+  const activitiesUsersColumns = new helpers.ColumnSet(['user_id', 'activity_id'], {table: 'ohhi_user_activity'});
 
   const lookupKidsAges = () => {
     if (kids_ages && kids_ages.length) {
-      let agesQuery = "select id from ohhi_kids_age where label in ($1^)"
+      let agesQuery = 'SELECT id FROM ohhi_kids_age WHERE kids_age_label IN ($1^)';
       return db.query(agesQuery, pgp.as.csv(kids_ages))
-          .then(kidsAgesIds => {
-            junctionInsertValues = kidsAgesIds.map((ageRecord) => {
+          .then(kidsAgesRecords => {
+            kidsAgeJunctionInsertValues = kidsAgesRecords.map((ageRecord) => {
               return {user_id: userId, kids_age_id: ageRecord.id}
+            })
+          })
+          .catch((error) => {
+            throw error
+          })
+    }
+  }
+
+  const lookupActivities = () => {
+    if (activities && activities.length) {
+      let activitiesQuery = 'SELECT id FROM ohhi_activity WHERE activity_label IN ($1^)';
+      return db.query(activitiesQuery, pgp.as.csv(activities))
+          .then(activityRecords => {
+            activityJunctionInsertValues = activityRecords.map((activityRecord) => {
+              return {user_id: userId, activity_id: activityRecord.id}
             })
           })
           .catch(error => {
@@ -44,9 +60,11 @@ const updateUser = (req, res, next) => {
           })
     }
   }
+
   return Promise
     .resolve()
     .then(lookupKidsAges)
+    .then(lookupActivities)
     .then(() => {
       db.tx(t => {
 
@@ -74,37 +92,64 @@ const updateUser = (req, res, next) => {
         ];
 
         if (kids_ages && kids_ages.length) {
-          const userKidsAgeInsert = t.any(helpers.insert(junctionInsertValues, agesUsersColumns) +
-              " ON CONFLICT ON CONSTRAINT user_kids_age_pkey " +
-              " DO NOTHING returning *")
+          const userKidsAgeInsert = t.any(helpers.insert(kidsAgeJunctionInsertValues, agesUsersColumns) +
+                                          ' ON CONFLICT ON CONSTRAINT user_kids_age_pkey ' +
+                                          ' DO NOTHING RETURNING *')
 
           queries.push(userKidsAgeInsert)
         }
 
+        if (activities && activities.length) {
+          const deleteActivitiesFromJunction = t.any('DELETE FROM ohhi_user_activity ' +
+                                                    ' WHERE user_id = $1 RETURNING *', [userId]);
+
+
+          const userActivityInsert = t.any(helpers.insert(activityJunctionInsertValues, activitiesUsersColumns) +
+                                          ' RETURNING *')
+
+          queries.push(deleteActivitiesFromJunction, userActivityInsert)
+        }
+
         return t.batch(queries)
       })
-      .then(() => {
-        return db.query("select u.*, k.label from ohhi_user as u " +
-            " left join ohhi_user_kids_age as j on j.user_id = u.id " +
-            " left join ohhi_kids_age as k on j.kids_age_id = k.id " +
-            " where u.id=$1",[userId])
+      .then((data) => {
+
+        console.log('DATA:::: ', data)
+
+        return db.query('SELECT u.*, k.kids_age_label, a.activity_label FROM ohhi_user AS u '+
+                        ' LEFT JOIN ohhi_user_kids_age AS kj ON kj.user_id = u.id ' +
+                        ' LEFT JOIN ohhi_kids_age AS k ON kj.kids_age_id = k.id ' +
+                        ' LEFT JOIN ohhi_user_activity AS aj ON aj.user_id = u.id ' +
+                        ' LEFT JOIN ohhi_activity AS a ON aj.activity_id = k.id ' +
+                        ' WHERE u.id=$1',[userId])
       })
       .then(joinResult => {
+        //If there's a way to rewrite the joins so that this hacky logic isn't needed, that would be nice.
+
         const kidsAges = [];
+        const activities = [];
 
         joinResult.forEach(function(record){
-          kidsAges.push(record.label)
+          if (!kidsAges.includes(record.kids_age_label) && record.kids_age_label !== null){
+            kidsAges.push(record.kids_age_label)
+          }
+          if (!activities.includes(record.activity_label) && record.activity_label !== null){
+            activities.push(record.activity_label)
+          }
         });
 
-        delete joinResult[0].label;
+
+        delete joinResult[0].kids_age_label;
+        delete joinResult[0].activity_label;
         delete joinResult[0].password;
         joinResult[0].kids_ages = kidsAges;
+        joinResult[0].activities = activities;
 
         res.status(200).json({  message: 'User updated successfully!', success: true, data: joinResult[0] })
 
       })
       .catch(error => {
-        console.log("ERROR:", error.message || error);
+        console.log('ERROR:', error.message || error);
 
         res.status(400).json({ success: false, message: 'Cannot update user information!' })
 
