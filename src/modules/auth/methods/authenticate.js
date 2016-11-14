@@ -14,7 +14,7 @@ const comparePasswords = (password, hash) => {
 }
 
 const generateJwt = (id) => {
- return jwt.sign(id, config.secret)
+  return jwt.sign(id, config.secret)
 }
 
 const login = (req, res, next) => {
@@ -33,7 +33,7 @@ const login = (req, res, next) => {
         res.status(401).json({ message: 'Authentication failed! Password is incorrect.', success: false })
       } else {
         delete userInfo.password
-        
+
         res.status(200).json({ message: 'Authentication successful!', success: true, token: `JWT ${generateJwt(userInfo.id)}`, data: userInfo })
       }
     })

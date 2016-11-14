@@ -28,8 +28,8 @@ const updateUser = (req, res, next) => {
   } = req.body
   let kidsAgeJunctionInsertValues
   let activityJunctionInsertValues
-  const agesUsersColumns       = new helpers.ColumnSet(['user_id', 'kids_age_id'], {table: 'ohhi_user_kids_age'})
-  const activitiesUsersColumns = new helpers.ColumnSet(['user_id', 'activity_id'], {table: 'ohhi_user_activity'})
+  const agesUsersColumns = new helpers.ColumnSet(['user_id', 'kids_age_id'], { table: 'ohhi_user_kids_age' })
+  const activitiesUsersColumns = new helpers.ColumnSet(['user_id', 'activity_id'], { table: 'ohhi_user_activity' })
 
   const lookupKidsAges = () => {
     if (kids_ages && kids_ages.length) {
@@ -37,7 +37,7 @@ const updateUser = (req, res, next) => {
       return db.query(agesQuery, pgp.as.csv(kids_ages))
           .then(kidsAgesRecords => {
             kidsAgeJunctionInsertValues = kidsAgesRecords.map((ageRecord) => {
-              return {user_id: userId, kids_age_id: ageRecord.id}
+              return { user_id: userId, kids_age_id: ageRecord.id }
             })
           })
           .catch((error) => {
@@ -52,7 +52,7 @@ const updateUser = (req, res, next) => {
       return db.query(activitiesQuery, pgp.as.csv(activities))
           .then(activityRecords => {
             activityJunctionInsertValues = activityRecords.map((activityRecord) => {
-              return {user_id: userId, activity_id: activityRecord.id}
+              return { user_id: userId, activity_id: activityRecord.id }
             })
           })
           .catch(error => {
@@ -66,9 +66,8 @@ const updateUser = (req, res, next) => {
     .then(lookupKidsAges)
     .then(lookupActivities)
     .then(() => {
-      //Queries executed in the same batch/transaction will be rolled back if any one of them fails.
+      // Queries executed in the same batch/transaction will be rolled back if any one of them fails.
       db.tx(transaction => {
-
         const queries = [
           transaction.one('UPDATE ohhi_user SET first_name=$1, last_name=$2, birth_date=$3, hometown=$4, profile_picture=$5, introduction=$6, has_kids=$7, has_pets=$8, number_of_kids=$9, about_pets=$10, is_service_member=$11, current_station=$12, facebook=$13, twitter=$14, instagram=$15, pinterest=$16 ' +
           ' WHERE id=$17 RETURNING *', [
@@ -104,7 +103,6 @@ const updateUser = (req, res, next) => {
           const deleteActivitiesFromJunction = transaction.any('DELETE FROM ohhi_user_activity ' +
                                                     ' WHERE user_id = $1 RETURNING *', [userId])
 
-
           const userActivityInsert = transaction.any(helpers.insert(activityJunctionInsertValues, activitiesUsersColumns) +
                                           ' RETURNING *')
 
@@ -114,24 +112,24 @@ const updateUser = (req, res, next) => {
         return transaction.batch(queries)
       })
       .then(() => {
-        return db.query('SELECT u.*, k.kids_age_label, a.activity_label FROM ohhi_user AS u '+
+        return db.query('SELECT u.*, k.kids_age_label, a.activity_label FROM ohhi_user AS u ' +
                         ' LEFT JOIN ohhi_user_kids_age AS kj ON kj.user_id = u.id ' +
                         ' LEFT JOIN ohhi_kids_age AS k ON kj.kids_age_id = k.id ' +
                         ' LEFT JOIN ohhi_user_activity AS aj ON aj.user_id = u.id ' +
                         ' LEFT JOIN ohhi_activity AS a ON aj.activity_id = k.id ' +
-                        ' WHERE u.id=$1',[userId])
+                        ' WHERE u.id=$1', [userId])
       })
       .then(joinResult => {
-        //If there's a way to rewrite the joins so that this hacky logic isn't needed, that would be nice.
+        // If there's a way to rewrite the joins so that this hacky logic isn't needed, that would be nice.
 
         const kidsAges = []
         const activities = []
 
-        joinResult.forEach(function(record){
-          if (!kidsAges.includes(record.kids_age_label) && record.kids_age_label !== null){
+        joinResult.forEach(function (record) {
+          if (!kidsAges.includes(record.kids_age_label) && record.kids_age_label !== null) {
             kidsAges.push(record.kids_age_label)
           }
-          if (!activities.includes(record.activity_label) && record.activity_label !== null){
+          if (!activities.includes(record.activity_label) && record.activity_label !== null) {
             activities.push(record.activity_label)
           }
         })
@@ -142,7 +140,7 @@ const updateUser = (req, res, next) => {
         joinResult[0].kids_ages = kidsAges
         joinResult[0].activities = activities
 
-        res.status(200).json({  message: 'User updated successfully!', success: true, data: joinResult[0] })
+        res.status(200).json({ message: 'User updated successfully!', success: true, data: joinResult[0] })
       })
       .catch(error => {
         res.status(400).json({ success: false, message: 'Cannot update user information!' })
