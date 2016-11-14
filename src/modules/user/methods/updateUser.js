@@ -1,9 +1,8 @@
-import config from '../../../../config'
 import db from '../../../core/db'
 
 const updateUser = (req, res, next) => {
   const { userId } = req.params
-  const { 
+  const {
     first_name,
     last_name,
     birth_date,
@@ -38,7 +37,7 @@ const updateUser = (req, res, next) => {
     twitter,
     instagram,
     pinterest,
-    userId 
+    userId
   ])
   .then(user => {
     delete user.password
