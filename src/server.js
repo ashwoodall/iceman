@@ -12,7 +12,6 @@ import reference from './modules/reference/routes'
 import user from './modules/user/routes'
 
 const server = (app) => {
-
   const router = express.Router()
 
   router.get('/', (req, res) => {
@@ -36,7 +35,6 @@ const server = (app) => {
   user(router, passport)
 
   app.use('/', router)
-
 }
 
 export default server
