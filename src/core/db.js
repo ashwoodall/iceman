@@ -7,7 +7,8 @@ const options = {
   promiseLib: bluebird
 }
 
-const pgp = pg(options)
+export const pgp = pg(options)
+
 const db = pgp(config.db)
 
 export default db

@@ -1,9 +1,8 @@
-import config from '../../../../config'
 import db from '../../../core/db'
 
 const getAllMessages = (req, res, next) => {
   const { conversationId } = req.params
-  
+
   return db.many('SELECT * FROM ohhi_message WHERE convo_id=$1', [conversationId])
     .then(result => res.status(200).json({ message: 'Messages found!', success: true, data: result }))
     .catch(error => {
