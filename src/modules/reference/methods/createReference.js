@@ -1,18 +1,23 @@
 import db from '../../../core/db'
 
 const createReference = (req, res, next) => {
-  const {
-    author_id,
-    recipient_id,
-    title,
-    body } = req.body
+  const { id } = req.user
+  const { recipient_id, title, body } = req.body
 
-  db.none('INSERT INTO ohhi_reference(author_id, recipient_id, title, body, isPublished) VALUES($1, $2, $3, $4, $5)', [author_id, recipient_id, title, body, false])
-    .then(() => res.status(200).json({ message: 'Reference created successfully!', success: true }))
+  db.one('SELECT * FROM ohhi_reference WHERE author_id=$1 AND recipient_id=$2', [id, recipient_id])
+    .then(reference => res.status(400).json({ message: 'Reference already exists', success: false }))
     .catch(error => {
-      res.status(400).json({ message: 'Cannot create reference!', success: false })
+      if (error.received === 0) {
+        db.none('INSERT INTO ohhi_reference(author_id, recipient_id, title, body, isPublished) VALUES($1, $2, $3, $4, $5)', [id, recipient_id, title, body, false])
+          .then(() => res.status(200).json({ message: 'Reference created successfully!', success: true }))
+          .catch(error => {
+            res.status(400).json({ message: 'Cannot create reference!', success: false })
 
-      return next(error)
+            return next(error)
+          })
+      } else {
+        res.status(400).json({ message: 'Cannot create reference!', success: false })
+      }
     })
 }
 
