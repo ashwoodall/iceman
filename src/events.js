@@ -4,6 +4,10 @@ const events = (io) => {
 
     socket.emit('connected', { connected: true })
 
+    socket.on('conversation mounted', function(user) {
+      socket.emit('receive socket', socket.id)
+    })
+
     socket.on('join conversation', (conversation) => {
       console.log(conversation)
       socket.join(conversation)
