@@ -12,6 +12,7 @@ import config from '../config'
 
 // Servers
 import server from '../src/server'
+import events from '../src/events'
 
 const app = express()
 
@@ -26,15 +27,9 @@ app.use(morgan('dev'))
 
 const httpServer = http.createServer(app)
 const io = socket(httpServer)
-
-app.set('io', io)
+const sockets = events(io)
 
 server(app, io)
-
-io.on('connection', (socket) => {
-  socket.emit('connected', { connected: true })
-  socket.on('disconnect', () => { console.log('user disconnected') })
-})
 
 httpServer.listen(config.port, error => {
   if (error)
