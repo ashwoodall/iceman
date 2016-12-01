@@ -9,6 +9,7 @@ const events = (io) => {
     })
 
     socket.on('new message', (message) => {
+      console.log('new message')
       socket.broadcast.to(message.convo_id).emit('new socket message', message)
     })
 
