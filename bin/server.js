@@ -5,6 +5,7 @@ import express from 'express'
 import http from 'http'
 import morgan from 'morgan'
 import cors from 'cors'
+import socket from 'socket.io'
 
 // Config
 import config from '../config'
@@ -23,9 +24,17 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 
-server(app)
-
 const httpServer = http.createServer(app)
+const io = socket(httpServer)
+
+app.set('io', io)
+
+server(app, io)
+
+io.on('connection', (socket) => {
+  socket.emit('connected', { connected: true })
+  socket.on('disconnect', () => { console.log('user disconnected') })
+})
 
 httpServer.listen(config.port, error => {
   if (error)

@@ -6,7 +6,7 @@ const getAllConversations = (req, res, next) => {
 
   db.task(tasks => {
     return tasks.map('SELECT id, initiator_id, recipient_id FROM ohhi_conversation WHERE recipient_id=$1 OR initiator_id=$1', [id], conversation => {
-      let other = id === conversation.initiator_id ? conversation.recipient_id : conversation.initiator_id=$1
+      let other = id === conversation.initiator_id ? conversation.recipient_id : conversation.initiator_id
 
       return tasks.one('SELECT id, first_name, last_name, profile_picture FROM ohhi_user WHERE id=$1', [other], user => {
         conversation.participant = user

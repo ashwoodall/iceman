@@ -12,7 +12,7 @@ import message from './modules/message/routes'
 import reference from './modules/reference/routes'
 import user from './modules/user/routes'
 
-const server = (app) => {
+const server = (app, io) => {
   const router = express.Router()
 
   router.get('/', (req, res) => {
@@ -30,7 +30,7 @@ const server = (app) => {
   // Setup Routes
   console.log(chalk.yellow('[express] Initializing auth routes...'))
 
-  auth(router, passport)
+  auth(router, passport, io)
   conversation(router, passport)
   message(router, passport)
   reference(router, passport)
