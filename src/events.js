@@ -5,11 +5,12 @@ const events = (io) => {
     socket.emit('connected', { connected: true })
 
     socket.on('join conversation', (conversation) => {
+      console.log(conversation)
       socket.join(conversation)
     })
 
     socket.on('new message', (message) => {
-      console.log('new message')
+      console.log(message.convo_id)
       socket.broadcast.to(message.convo_id).emit('new socket message', message)
     })
 
