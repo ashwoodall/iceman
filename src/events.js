@@ -13,7 +13,7 @@ const events = (io) => {
     })
 
     socket.on('new message', (message) => {
-      io.sockets.in(message.convo_id).emit('new socket message', message)
+      io.to(message.convo_id).emit('new socket message', message)
     })
 
     socket.on('new conversation', (conversation) => {
