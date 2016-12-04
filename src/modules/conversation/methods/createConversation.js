@@ -28,7 +28,6 @@ const createConversation = (req, res, next) => {
 
     return error
   })
-
 }
 
 export default createConversation

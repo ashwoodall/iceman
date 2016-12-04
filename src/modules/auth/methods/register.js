@@ -8,6 +8,7 @@ const bcryptSalt = Promise.promisify(genSalt)
 
 const register = (req, res, next) => {
   const { current_station, email, password } = req.body
+  console.log('req.body: ', req.body)
 
   return bcryptSalt(10)
     .then(salt => bcryptHash(password, salt, null))

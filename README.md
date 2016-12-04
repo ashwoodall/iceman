@@ -38,7 +38,7 @@ We use es6 / es7 syntax and options for our application. We are currently transp
 
 #### Postgres
 
-The Postgres code is also seperated in separete modules. This module hold all files needed for a specific endpoint.
+The Postgres code is also separated in separate modules. This module hold all files needed for a specific endpoint.
 
 ```
 .
@@ -47,3 +47,9 @@ The Postgres code is also seperated in separete modules. This module hold all fi
     ├── routes.js  # API routes
     └── schema.sql # Data model
 ```
+
+Running the following queries will populate the activity and kids_age lookup tables:
+
+`INSERT INTO ohhi_activity (activity_label) VALUES ('Go for a walk'), ('Grab lunch or dinner'), ('Go shopping together'), ('Playdate with the kids'), ('Volunteering'), ('Grab coffee or a drink'), ('Workout together'), ('Go to a party'), ('Attend a community event');`
+
+`INSERT INTO ohhi_kids_age (kids_age_label) VALUES ('Infant'), ('Toddler'), ('Pre-K'), ('Elementary School'), ('Middle School'), ('High School'), ('College'), ('Adult');`

@@ -44,7 +44,7 @@ install-osx:
 	@echo "Reinstalling postgres"
 	$(BREW) install postgres
 
-	@echo "Starting postrgres"
+	@echo "Starting postgres"
 	$(BREW) services start postgres
 
 install-modules:
@@ -116,5 +116,8 @@ start:
 	@echo "Starting Server"
 	$(BREW) services start postgres
 	$(NPM) start
+
+lint:
+	node_modules/.bin/eslint --fix src/
 
 
