@@ -4,7 +4,7 @@ import Promise from 'bluebird'
 const helpers = pgp.helpers
 
 const updateUser = (req, res, next) => {
-  const { userId } = req.params
+  const { id } = req.user
   const {
     first_name,
     last_name,
@@ -34,7 +34,7 @@ const updateUser = (req, res, next) => {
       return db.query('SELECT id FROM ohhi_kids_age WHERE kids_age_label IN ($1^)', pgp.as.csv(kids_ages))
           .then(kidsAgesRecords => {
             kidsAgeJunctionInsertValues = kidsAgesRecords.map((ageRecord) => {
-              return { user_id: userId, kids_age_id: ageRecord.id }
+              return { user_id: id, kids_age_id: ageRecord.id }
             })
           })
           .catch((error) => {
@@ -48,7 +48,7 @@ const updateUser = (req, res, next) => {
       return db.query('SELECT id FROM ohhi_activity WHERE activity_label IN ($1^)', pgp.as.csv(activities))
           .then(activityRecords => {
             activityJunctionInsertValues = activityRecords.map((activityRecord) => {
-              return { user_id: userId, activity_id: activityRecord.id }
+              return { user_id: id, activity_id: activityRecord.id }
             })
           })
           .catch(error => {
@@ -79,13 +79,13 @@ const updateUser = (req, res, next) => {
           instagram,
           pinterest,
           completed_profile,
-          userId
+          id
         ])
       ]
 
       if (kids_ages && kids_ages.length) {
         const agesUsersColumns = new helpers.ColumnSet(['user_id', 'kids_age_id'], { table: 'ohhi_user_kids_age' })
-        const deleteKidsAgesFromJunction = transaction.any('DELETE FROM ohhi_user_kids_age WHERE user_id = $1 RETURNING *', [userId])
+        const deleteKidsAgesFromJunction = transaction.any('DELETE FROM ohhi_user_kids_age WHERE user_id = $1 RETURNING *', [id])
         const userKidsAgeInsert = transaction.any(helpers.insert(kidsAgeJunctionInsertValues, agesUsersColumns) + ' RETURNING *')
 
         queries.push(deleteKidsAgesFromJunction, userKidsAgeInsert)
@@ -93,7 +93,7 @@ const updateUser = (req, res, next) => {
 
       if (activities && activities.length) {
         const activitiesUsersColumns = new helpers.ColumnSet(['user_id', 'activity_id'], { table: 'ohhi_user_activity' })
-        const deleteActivitiesFromJunction = transaction.any('DELETE FROM ohhi_user_activity WHERE user_id = $1 RETURNING *', [userId])
+        const deleteActivitiesFromJunction = transaction.any('DELETE FROM ohhi_user_activity WHERE user_id = $1 RETURNING *', [id])
         const userActivityInsert = transaction.any(helpers.insert(activityJunctionInsertValues, activitiesUsersColumns) + ' RETURNING *')
 
         queries.push(deleteActivitiesFromJunction, userActivityInsert)
@@ -106,9 +106,9 @@ const updateUser = (req, res, next) => {
   const joinResults = () => {
     return db.tx(transaction => {
       const queries = [
-        transaction.one('SELECT first_name, last_name, birth_date, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest, completed_profile from ohhi_user WHERE id=$1', [userId]),
-        transaction.query('SELECT kids_age_label FROM ohhi_user_kids_age LEFT JOIN ohhi_kids_age ON ohhi_kids_age.id = ohhi_user_kids_age.kids_age_id where ohhi_user_kids_age.user_id=$1', [userId]),
-        transaction.query('SELECT activity_label FROM ohhi_user_activity LEFT JOIN ohhi_activity ON ohhi_activity.id = ohhi_user_activity.activity_id where ohhi_user_activity.user_id=$1', [userId])
+        transaction.one('SELECT first_name, last_name, birth_date, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest, completed_profile from ohhi_user WHERE id=$1', [id]),
+        transaction.query('SELECT kids_age_label FROM ohhi_user_kids_age LEFT JOIN ohhi_kids_age ON ohhi_kids_age.id = ohhi_user_kids_age.kids_age_id where ohhi_user_kids_age.user_id=$1', [id]),
+        transaction.query('SELECT activity_label FROM ohhi_user_activity LEFT JOIN ohhi_activity ON ohhi_activity.id = ohhi_user_activity.activity_id where ohhi_user_activity.user_id=$1', [id])
       ]
 
       return transaction.batch(queries)

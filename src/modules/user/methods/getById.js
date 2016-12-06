@@ -20,7 +20,7 @@ const getUser = (req, res, next) => {
         return record.activity_label
       })
 
-      res.status(200).json({ message: 'User updated successfully!', success: true, data: user })
+      res.status(200).json({ message: 'User Found', success: true, data: user })
     })
     .catch(error => {
       res.status(400).json({ success: false, message: 'Cannot find user!' })
