@@ -44,7 +44,7 @@ install-osx:
 	@echo "Reinstalling postgres"
 	$(BREW) install postgres
 
-	@echo "Starting postrgres"
+	@echo "Starting postgres"
 	$(BREW) services start postgres
 
 install-modules:
@@ -82,6 +82,12 @@ setup-db:
 	$(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $(USER);"
 	$(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $(USER);"
 
+	@echo "Populating activity and kids_age lookup tables"
+	$(PSQL) $(DB) -c "INSERT INTO ohhi_activity (activity_label) VALUES ('Go for a walk'), ('Grab lunch or dinner'), ('Go shopping together'), ('Playdate with the kids'), ('Volunteering'), ('Grab coffee or a drink'), ('Workout together'), ('Go to a party'), ('Attend a community event');"
+	$(PSQL) $(DB) -c "INSERT INTO ohhi_kids_age (kids_age_label) VALUES ('Infant'), ('Toddler'), ('Pre-K'), ('Elementary School'), ('Middle School'), ('High School'), ('College'), ('Adult');"
+
+
+
 setup-db-linux:
 	@echo "Initializing $(DB) database"
 	@if sudo -u $(USER) $(PSQL) -lqt | cut -d \| -f 1 | grep -qw $(DB) ; then \
@@ -111,10 +117,19 @@ setup-db-linux:
 	sudo -u $(USER) $(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $(USER);"
 	sudo -u $(USER) $(PSQL) $(DB) -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $(USER);"
 
+	@echo "Populating activity and kids_age lookup tables"
+	sudo -u $(USER) $(PSQL) $(DB) -c "INSERT INTO ohhi_activity (activity_label) VALUES ('Go for a walk'), ('Grab lunch or dinner'), ('Go shopping together'), ('Playdate with the kids'), ('Volunteering'), ('Grab coffee or a drink'), ('Workout together'), ('Go to a party'), ('Attend a community event');"
+	sudo -u $(USER) $(PSQL) $(DB) -c "INSERT INTO ohhi_kids_age (kids_age_label) VALUES ('Infant'), ('Toddler'), ('Pre-K'), ('Elementary School'), ('Middle School'), ('High School'), ('College'), ('Adult');"
+
+
+
 start:
 
 	@echo "Starting Server"
 	$(BREW) services start postgres
 	$(NPM) start
+
+lint:
+	node_modules/.bin/eslint --fix src/
 
 

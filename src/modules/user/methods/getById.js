@@ -3,34 +3,24 @@ import db from '../../../core/db'
 const getUser = (req, res, next) => {
   const { userId } = req.params
 
-  return db.query('SELECT u.*, k.kids_age_label, a.activity_label FROM ohhi_user AS u ' +
-        ' LEFT JOIN ohhi_user_kids_age AS kj ON kj.user_id = u.id ' +
-        ' LEFT JOIN ohhi_kids_age AS k ON kj.kids_age_id = k.id ' +
-        ' LEFT JOIN ohhi_user_activity AS aj ON aj.user_id = u.id ' +
-        ' LEFT JOIN ohhi_activity AS a ON aj.activity_id = k.id ' +
-        ' WHERE u.id=$1', [userId])
-    .then(joinResult => {
-        // If there's a way to rewrite the joins so that this hacky logic isn't needed, that would be nice.
+  return db.tx(transaction => {
+    const queries = [
+      transaction.one('SELECT first_name, last_name, birth_date, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest from ohhi_user WHERE id=$1', [userId]),
+      transaction.query('SELECT kids_age_label FROM ohhi_user_kids_age LEFT JOIN ohhi_kids_age ON ohhi_kids_age.id = ohhi_user_kids_age.kids_age_id where ohhi_user_kids_age.user_id=$1', [userId]),
+      transaction.query('SELECT activity_label FROM ohhi_user_activity LEFT JOIN ohhi_activity ON ohhi_activity.id = ohhi_user_activity.activity_id where ohhi_user_activity.user_id=$1', [userId])
+    ]
 
-      const kidsAges = []
-      const activities = []
-
-      joinResult.forEach(function (record) {
-        if (!kidsAges.includes(record.kids_age_label) && record.kids_age_label !== null) {
-          kidsAges.push(record.kids_age_label)
-        }
-        if (!activities.includes(record.activity_label) && record.activity_label !== null) {
-          activities.push(record.activity_label)
-        }
+    return transaction.batch(queries)
+  })
+    .spread((user, kids_ages, activities) => {
+      user.kids_ages = kids_ages.map(function (record) {
+        return record.kids_age_label
+      })
+      user.activities = activities.map(function (record) {
+        return record.activity_label
       })
 
-      delete joinResult[0].kids_age_label
-      delete joinResult[0].activity_label
-      delete joinResult[0].password
-      joinResult[0].kids_ages = kidsAges
-      joinResult[0].activities = activities
-
-      res.status(200).json({ message: 'User found!', success: true, data: joinResult[0] })
+      res.status(200).json({ message: 'User updated successfully!', success: true, data: user })
     })
     .catch(error => {
       res.status(400).json({ success: false, message: 'Cannot find user!' })

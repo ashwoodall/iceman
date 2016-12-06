@@ -1,5 +1,4 @@
 import db from '../../../core/db'
-import { forEach } from 'lodash'
 
 const getAllConversations = (req, res, next) => {
   const { id } = req.user
