@@ -23,7 +23,8 @@ const updateUser = (req, res, next) => {
     instagram,
     pinterest,
     kids_ages,
-    activities
+    activities,
+    completed_profile
   } = req.body
 
   let kidsAgeJunctionInsertValues
