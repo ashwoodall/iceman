@@ -27,6 +27,7 @@ CREATE TABLE ohhi_user(
   twitter               VARCHAR(255),
   instagram             VARCHAR(255),
   pinterest             VARCHAR(255),
+  completed_profile     BOOLEAN,
   disabled              BOOLEAN
 );
 
