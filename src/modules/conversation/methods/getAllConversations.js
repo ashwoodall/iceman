@@ -10,11 +10,7 @@ const getAllConversations = (req, res, next) => {
       return tasks.one('SELECT id, first_name, last_name, profile_picture FROM ohhi_user WHERE id=$1', [other], user => {
         conversation.participant = user
 
-        return tasks.one('SELECT * FROM ohhi_message WHERE convo_id=$1 ORDER BY timestamp DESC LIMIT 1', [conversation.id], message => {
-          conversation.lastMessage = message
-
-          return conversation
-        })
+        return conversation
       })
     })
     .then(tasks.batch)
