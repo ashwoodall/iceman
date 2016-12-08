@@ -11,7 +11,7 @@ CREATE TABLE ohhi_user(
   last_name             VARCHAR(100),
   email                 VARCHAR(100) UNIQUE NOT NULL,
   password              VARCHAR(255) UNIQUE NOT NULL,
-  birth_date            DATE,
+  age                   SMALLINT,
   hometown              VARCHAR(100),
   profile_picture       VARCHAR(255),
   introduction          TEXT,
