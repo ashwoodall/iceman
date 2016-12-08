@@ -40,7 +40,7 @@ const server = (app, io) => {
 
   app.use((err, req, res, next) => {
     console.error(err)
-    return res.status(500).json({ succes: false, message: 'Unauthorized User!' })
+    return res.status(500).json({ success: false, message: 'Unauthorized User!' })
   })
 }
 
