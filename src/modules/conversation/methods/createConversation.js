@@ -12,8 +12,8 @@ const createConversation = (req, res, next) => {
   })
   .spread((one, two) => {
     if (!one.length && !two.length) {
-      db.none('INSERT INTO ohhi_conversation(initiator_id, recipient_id) values($1, $2)', [id, recipient_id])
-        .then(() => res.status(200).json({ message: 'Conversation created successfully', success: true }))
+      db.one('INSERT INTO ohhi_conversation(initiator_id, recipient_id) values($1, $2) RETURNING *', [id, recipient_id])
+        .then(conversation => res.status(200).json({ message: 'Conversation created successfully', success: true, data: conversation }))
         .catch(error => {
           res.status(400).json({ message: 'Conversation could not be created', success: false })
 
