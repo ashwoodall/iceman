@@ -132,6 +132,7 @@ const updateUser = (req, res, next) => {
       .then(lookupKidsAges)
       .then(lookupActivities)
       .then(batchQueries)
+      .delay(100)
       .then(joinResults)
       .spread(cleanUpResults)
       .catch(error => {
