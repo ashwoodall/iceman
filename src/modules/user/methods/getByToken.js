@@ -14,7 +14,7 @@ const getByToken = (req, res, next) => {
       return next(error)
     }
 
-    db.one('SELECT first_name, last_name, age, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest, completed_profile from ohhi_user WHERE id=$1', [user])
+    db.one('SELECT first_name, last_name, birth_date, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest, completed_profile from ohhi_user WHERE id=$1', [user])
       .then(user => {
         res.status(200).json({ message: 'User id found by token!', success: true, token: authorization, data: user })
       })
