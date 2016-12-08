@@ -5,7 +5,7 @@ const getUser = (req, res, next) => {
 
   return db.tx(transaction => {
     const queries = [
-      transaction.one('SELECT first_name, last_name, age, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest from ohhi_user WHERE id=$1', [userId]),
+      transaction.one('SELECT first_name, last_name, birth_date, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest from ohhi_user WHERE id=$1', [userId]),
       transaction.query('SELECT kids_age_label FROM ohhi_user_kids_age LEFT JOIN ohhi_kids_age ON ohhi_kids_age.id = ohhi_user_kids_age.kids_age_id where ohhi_user_kids_age.user_id=$1', [userId]),
       transaction.query('SELECT activity_label FROM ohhi_user_activity LEFT JOIN ohhi_activity ON ohhi_activity.id = ohhi_user_activity.activity_id where ohhi_user_activity.user_id=$1', [userId])
     ]
