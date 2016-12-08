@@ -14,7 +14,6 @@ const getById = (req, res, next) => {
         return conversation
       })
     })
-    .then(tasks.batch)
   })
   .then(data => res.status(200).json({ message: 'Conversations found!', success: true, data: data }))
   .catch(error => {
