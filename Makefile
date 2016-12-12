@@ -2,6 +2,7 @@ BREW ?= brew
 DB := ohhi
 MAKE ?= make
 NPM ?= npm
+YARN ?= yarn
 OSTYPE := $(shell uname)
 POSTGRES ?= postgres
 PSQL ?= psql
@@ -50,7 +51,7 @@ install-osx:
 install-modules:
 
 	@echo "Install node modules"
-	$(NPM) install
+	$(YARN)
 
 setup-db:
 
