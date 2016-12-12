@@ -1,6 +1,7 @@
 export createReference from './createReference'
 export deleteReference from './deleteReference'
 export getAllReferences from './getAllReferences'
+export getPublishedReferences from './getPublishedReferences'
 export getReference from './getReference'
 export publishReference from './publishReference'
 export unpublishReference from './unpublishReference'
