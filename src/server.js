@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import express from 'express'
 import passport from 'passport'
 
-// Pastport
+// Passport
 import jwtStrategy from './core/passport'
 
 // Routes
