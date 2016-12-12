@@ -5,10 +5,10 @@ const getAllReferences = (req, res, next) => {
 
   db.task(tasks => {
     return tasks.map('SELECT id, author_id, recipient_id, is_published, body FROM ohhi_reference WHERE recipient_id=$1', [id], reference => {
-      let other = conversation.author_id
+      let other = reference.author_id
 
       return tasks.one('SELECT id, first_name, last_name FROM ohhi_user WHERE id=$1', [other], user => {
-        reference.participant = user
+        reference.author = user
 
         return reference
       })
