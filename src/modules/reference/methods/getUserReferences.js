@@ -1,10 +1,10 @@
 import db from '../../../core/db'
 
-const getPublishedReferences = (req, res, next) => {
-  const { id } = req.user
+const getUserReferences = (req, res, next) => {
+  const { userId } = req.params
 
   db.task(tasks => {
-    return tasks.map('SELECT id, author_id, recipient_id, is_published, body FROM ohhi_reference WHERE recipient_id=$1 AND is_published=$2', [id, true], reference => {
+    return tasks.map('SELECT id, author_id, recipient_id, is_published, body FROM ohhi_reference WHERE recipient_id=$1 AND is_published=$2', [userId, true], reference => {
       let other = reference.author_id
 
       return tasks.one('SELECT id, first_name, last_name FROM ohhi_user WHERE id=$1', [other], user => {
@@ -23,4 +23,4 @@ const getPublishedReferences = (req, res, next) => {
   })
 }
 
-export default getPublishedReferences
+export default getUserReferences
