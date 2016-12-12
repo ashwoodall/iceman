@@ -30,5 +30,3 @@ CREATE TABLE ohhi_user(
   completed_profile     BOOLEAN NOT NULL DEFAULT FALSE,
   disabled              BOOLEAN
 );
-
---kids_age and activities should probably be separate tables that are linked to this table by foreign key

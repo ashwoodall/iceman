@@ -60,7 +60,7 @@ const updateUser = (req, res, next) => {
 
   // Queries executed in the same batch/transaction will be rolled back if any one of them fails.
   const batchQueries = () => {
-    db.tx(transaction => {
+    return db.tx(transaction => {
       const queries = [
         transaction.one('UPDATE ohhi_user SET first_name=$1, last_name=$2, birth_date=$3, hometown=$4, profile_picture=$5, introduction=$6, has_kids=$7, has_pets=$8, number_of_kids=$9, about_pets=$10, is_service_member=$11, current_station=$12, facebook=$13, twitter=$14, instagram=$15, pinterest=$16, completed_profile=$17 WHERE id=$18 RETURNING *', [
           first_name,
@@ -132,7 +132,6 @@ const updateUser = (req, res, next) => {
       .then(lookupKidsAges)
       .then(lookupActivities)
       .then(batchQueries)
-      .delay(100)
       .then(joinResults)
       .spread(cleanUpResults)
       .catch(error => {
