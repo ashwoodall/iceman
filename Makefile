@@ -49,6 +49,7 @@ install-osx:
 	$(BREW) services start postgres
 
 install-modules:
+	$(NPM) install yarn -g
 
 	@echo "Install node modules"
 	$(YARN)
