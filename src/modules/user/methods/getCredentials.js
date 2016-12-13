@@ -11,12 +11,12 @@ const getCredentials = (req, res, next) => {
 
   const s3 = new AWS.S3()
   const timestamp = new Date().getTime()
-  const fileName = id + '/' + timestamp + '/' + req.query['file-name']
-  const encodedFileName = encodeURIComponent(fileName)
+  const encodedFileName = encodeURIComponent(req.query['file-name'])
+  const fileName = id + '/' + timestamp + '/' + encodedFileName
   const fileType = req.query['file-type']
   const s3Params = {
     Bucket: s3Config.bucket,
-    Key: encodedFileName,
+    Key: fileName,
     Expires: 300,
     ContentType: fileType,
     ACL: 'public-read'
@@ -31,7 +31,7 @@ const getCredentials = (req, res, next) => {
 
     const returnData = {
       signedRequest: data,
-      url: `https://${s3Config.bucket}.s3.amazonaws.com/${encodedFileName}`
+      url: `https://${s3Config.bucket}.s3.amazonaws.com/${fileName}`
     }
 
     res.status(200).json({ success: true, data: returnData })
