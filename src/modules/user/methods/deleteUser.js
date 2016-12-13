@@ -1,7 +1,7 @@
 import db from '../../../core/db'
 
 const deleteUser = (req, res, next) => {
- const { id } = req.user
+  const { id } = req.user
 
   db.one('DELETE FROM ohhi_user WHERE ID=$1 RETURNING id', [id])
     .then(id => res.status(200).json({ message: 'Account successfully deleted!', success: true }))

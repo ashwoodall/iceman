@@ -5,5 +5,6 @@ CREATE TABLE ohhi_message(
   convo_id      INTEGER REFERENCES ohhi_conversation (id),
   body          TEXT,
   isRead        BOOLEAN DEFAULT FALSE,
+  is_deleted    BOOLEAN DEFAULT FALSE,
   timestamp     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
