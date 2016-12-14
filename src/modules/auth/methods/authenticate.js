@@ -30,15 +30,15 @@ const login = (req, res, next) => {
     })
     .then(match => {
       if (!match) {
-        res.status(401).json({ message: 'Authentication failed! Password is incorrect.', success: false })
+        res.status(401).json({ message: 'Email or password is incorrect', success: false })
       } else {
         delete userInfo.password
 
-        res.status(200).json({ message: 'Authentication successful!', success: true, token: `JWT ${generateJwt(userInfo.id)}`, data: userInfo })
+        res.status(200).json({ message: 'Authentication successful', success: true, token: `JWT ${generateJwt(userInfo.id)}`, data: userInfo })
       }
     })
     .catch(error => {
-      res.status(400).json({ success: false, message: 'Authentication failed!' })
+      res.status(400).json({ success: false, message: 'Email or password is incorrect' })
 
       return next(error)
     })

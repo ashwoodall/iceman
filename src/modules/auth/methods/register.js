@@ -8,14 +8,13 @@ const bcryptSalt = Promise.promisify(genSalt)
 
 const register = (req, res, next) => {
   const { current_station, email, password } = req.body
-  console.log('req.body: ', req.body)
 
   return bcryptSalt(10)
     .then(salt => bcryptHash(password, salt, null))
     .then(hashedPassword => db.none('INSERT INTO ohhi_user(email, password, current_station) values($1, $2, $3)', [email, hashedPassword, current_station]))
     .then(() => res.status(200).json({ message: 'Registration successful!', success: true }))
     .catch(error => {
-      res.status(400).json({ success: false, message: 'Registration failed!' })
+      res.status(400).json({ success: false, message: 'That email address is already associated with an account. You may log in or enter a different email address' })
 
       return next(error)
     })
