@@ -7,7 +7,7 @@ const routes = (app, passport) => {
   app.get('/s3_credentials', passport.authenticate('jwt', { session: false }), getCredentials)
   app.put('/user', passport.authenticate('jwt', { session: false }), updateUser)
   app.put('/user/:userId/disable', passport.authenticate('jwt', { session: false }), disableUser)
-  app.delete('/user/:userId/delete', passport.authenticate('jwt', { session: false }), deleteUser)
+  app.put('/user/:userId/delete', passport.authenticate('jwt', { session: false }), deleteUser)
 }
 
 export default routes
