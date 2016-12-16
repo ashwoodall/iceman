@@ -60,7 +60,7 @@ const updateUser = (req, res, next) => {
 
   // Queries executed in the same batch/transaction will be rolled back if any one of them fails.
   const batchQueries = () => {
-    let isComplete = completedProfile && activities.length
+    let isComplete = completedProfile && activities.length > 0
 
     return db.tx(transaction => {
       const queries = [
