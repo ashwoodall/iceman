@@ -9,7 +9,7 @@ const getAllbyStation = (req, res, next) => {
       let people = []
 
       users.map(user => {
-        if (user.completed_profile || user.id !== id) people.push(user)
+        if (user.completed_profile && user.id !== id) people.push(user)
       })
 
       res.status(200).json({ message: 'Users found!', success: true, data: people })
