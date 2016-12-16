@@ -3,7 +3,7 @@ import db from '../../../core/db'
 const deleteUser = (req, res, next) => {
   const { id } = req.user
 
-  db.one('UPDATE ohhi_user SET disabled=$1 WHERE ID=$2 RETURNING id', [false, id])
+  db.one('UPDATE ohhi_user SET disabled=$1 WHERE ID=$2 RETURNING *', [false, id])
     .then(user => {
       delete user.password
 
