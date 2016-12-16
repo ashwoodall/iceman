@@ -1,5 +1,6 @@
 export deleteUser from './deleteUser'
 export disableUser from './disableUser'
+export enableUser from './enableUser'
 export getAllbyStation from './getAllbyStation'
 export getById from './getById'
 export getByToken from './getByToken'
