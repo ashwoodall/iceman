@@ -12,17 +12,15 @@ const createMessage = (req, res, next) => {
       const convoId = record[0].id
 
       return db.task(task => {
-        return task.one('UPDATE ohhi_conversation SET last_message_snippet = $1, updated_at=$2 WHERE id = $3 RETURNING id', [messageSnippet, updatedAt, convoId])
+        return task.one('UPDATE ohhi_conversation SET last_message_snippet = $1, updated_at=$2, unread_by=$3 WHERE id = $4 RETURNING id', [messageSnippet, updatedAt, recipient_id, convoId])
             .then(() => {
               return task.one('INSERT INTO ohhi_message(author, convo_id, body) values($1, $2, $3) RETURNING *', [id, convoId, body])
             })
       })
     } else {
       return db.task(task => {
-        return task.one('INSERT INTO ohhi_conversation(initiator_id, recipient_id, last_message_snippet) values($1, $2, $3) RETURNING id', [id, recipient_id, messageSnippet])
+        return task.one('INSERT INTO ohhi_conversation(initiator_id, recipient_id, last_message_snippet, unread_by) values($1, $2, $3, $2) RETURNING id', [id, recipient_id, messageSnippet])
             .then(conversation => {
-              console.log('conversation inserted: ', conversation)
-
               const convoId = conversation.id
               return task.one('INSERT INTO ohhi_message(author, convo_id, body) values($1, $2, $3) RETURNING *', [id, convoId, body])
             })
