@@ -21,7 +21,7 @@ const events = (io) => {
       io.to(data.message.convo_id).emit('new socket message', data.message)
 
       if (clients[data.recipient]) {
-        io.sockets.connected[clients[data.recipient].socket].emit('nofication', data.message)
+        io.sockets.connected[clients[data.recipient].socket].emit('new notification', data.message)
       } else {
         console.log('User not connected')
       }
