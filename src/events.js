@@ -2,7 +2,9 @@ const events = (io) => {
   io.on('connection', (socket) => {
     console.log('user connected')
 
-    console.log(io.sockets.clients())
+    io.sockets.sockets.map(function(e) {
+      console.log(e)
+    })
 
     socket.emit('connected', { connected: true })
 
