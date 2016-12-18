@@ -4,11 +4,7 @@ const events = (io) => {
   io.on('connection', (socket) => {
 
     socket.on('user-connected', user => {
-      console.log('user connected')
-
       clients[user] = socket.id
-
-      console.log(clients)
     })
 
     socket.emit('connected', { connected: true })
@@ -22,9 +18,13 @@ const events = (io) => {
     })
 
     socket.on('new message', data => {
-      console.log(data)
-
       io.to(data.message.convo_id).emit('new socket message', data.message)
+
+      if (clients[data.recipient]) {
+        io.sockets.connected[clients[data.recipient].socket].emit('nofication', data.message)
+      } else {
+        console.log('User not connected')
+      }
     })
 
     socket.on('new conversation', conversation => {
