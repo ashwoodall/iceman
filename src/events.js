@@ -2,9 +2,10 @@ let clients = {}
 
 const events = (io) => {
   io.on('connection', (socket) => {
-    console.log('user connected')
-
+    
     socket.on('user-connected', user => {
+      console.log('user connected')
+
       clients[user] = socket.id
     })
 
