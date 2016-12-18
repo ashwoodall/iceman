@@ -21,10 +21,10 @@ const events = (io) => {
       socket.join(conversation)
     })
 
-    socket.on('new message', message => {
-      console.log(message)
-      
-      io.to(message.convo_id).emit('new socket message', message)
+    socket.on('new message', data => {
+      console.log(data)
+
+      io.to(data.message.convo_id).emit('new socket message', data.message)
     })
 
     socket.on('new conversation', conversation => {
