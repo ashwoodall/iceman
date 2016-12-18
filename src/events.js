@@ -2,6 +2,7 @@ let clients = {}
 
 const events = (io) => {
   io.on('connection', (socket) => {
+    console.log('user connected')
 
     socket.on('user-connected', user => {
       clients[user] = socket.id
@@ -36,7 +37,7 @@ const events = (io) => {
     socket.on('disconnect', function() {
       for (var user in clients) {
         if (clients[user] === socket.id) {
-          delete clients[name]
+          delete clients[user]
 
           break
         }
