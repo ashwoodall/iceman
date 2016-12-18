@@ -19,6 +19,8 @@ const events = (io) => {
 
     socket.on('new message', data => {
       io.to(data.message.convo_id).emit('new socket message', data.message)
+      console.log(data.recipient)
+      console.log(clients)
 
       if (clients[data.recipient]) {
         io.sockets.connected[clients[data.recipient].socket].emit('new notification', data.message)
