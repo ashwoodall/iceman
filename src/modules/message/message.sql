@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS ohhi_message CASCADE;
 CREATE TABLE ohhi_message(
   id            SERIAL PRIMARY KEY,
-  author        INTEGER REFERENCES ohhi_user (id),
-  convo_id      INTEGER REFERENCES ohhi_conversation (id),
+  author        INTEGER REFERENCES ohhi_user (id) NOT NULL,
+  convo_id      INTEGER REFERENCES ohhi_conversation (id) NOT NULL,
   body          TEXT,
-  isRead        BOOLEAN DEFAULT FALSE,
-  is_deleted    BOOLEAN DEFAULT FALSE,
-  timestamp     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  is_read        BOOLEAN DEFAULT FALSE NOT NULL,
+  is_deleted    BOOLEAN DEFAULT FALSE NOT NULL,
+  created_at    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );

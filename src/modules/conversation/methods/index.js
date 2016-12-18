@@ -1,5 +1,5 @@
-export createConversation from './createConversation'
 export deleteConversation from './deleteConversation'
 export getAllConversations from './getAllConversations'
 export getConversation from './getConversation'
 export setDeleteFlag from './setDeleteFlag'
+export updateConvoReadStatus from './updateConvoReadStatus'
