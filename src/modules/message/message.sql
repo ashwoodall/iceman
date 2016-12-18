@@ -4,7 +4,7 @@ CREATE TABLE ohhi_message(
   author        INTEGER REFERENCES ohhi_user (id) NOT NULL,
   convo_id      INTEGER REFERENCES ohhi_conversation (id) NOT NULL,
   body          TEXT,
-  isRead        BOOLEAN DEFAULT FALSE NOT NULL,
+  is_read        BOOLEAN DEFAULT FALSE NOT NULL,
   is_deleted    BOOLEAN DEFAULT FALSE NOT NULL,
   created_at    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
