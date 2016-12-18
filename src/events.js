@@ -22,6 +22,8 @@ const events = (io) => {
     })
 
     socket.on('new message', message => {
+      console.log(message)
+      
       io.to(message.convo_id).emit('new socket message', message)
     })
 
