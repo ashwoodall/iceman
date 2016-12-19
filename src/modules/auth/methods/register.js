@@ -25,7 +25,7 @@ const register = (req, res, next) => {
           TemplateId: secrets.postmark.activationTemplate,
           To: email,
           TemplateModel: {
-            activationUrl: 'http://www.app.oh-hi.us/activate/' + encryptedId.toString()
+            activationUrl: 'http://www.app.oh-hi.us/activate?encoded=' + encryptedId.toString()
           }
         })
       })

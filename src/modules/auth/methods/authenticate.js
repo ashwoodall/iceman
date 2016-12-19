@@ -22,10 +22,9 @@ const login = (req, res, next) => {
 
   const { email, password } = req.body
 
-  db.one('SELECT first_name, last_name, email, password, id, birth_date, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, is_registered, current_station, facebook, twitter, instagram, pinterest, completed_profile, disabled FROM ohhi_user WHERE email=$1', [email])
+  db.one('SELECT first_name, last_name, email, password, id, birth_date, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, is_activated, current_station, facebook, twitter, instagram, pinterest, completed_profile, disabled FROM ohhi_user WHERE email=$1', [email])
     .then(user => {
       userInfo = user
-
       return comparePasswords(password, user.password)
     })
     .then(match => {
