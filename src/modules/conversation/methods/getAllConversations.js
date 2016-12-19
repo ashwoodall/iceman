@@ -9,7 +9,7 @@ const getAllConversations = (req, res, next) => {
 
       return tasks.one('SELECT id, first_name, last_name, profile_picture FROM ohhi_user WHERE id=$1', [other], user => {
         conversation.participant = user
-        conversation.isRead = id !== conversation.unread_by
+        conversation.is_read = id !== conversation.unread_by
         delete conversation.unread_by
 
         return conversation

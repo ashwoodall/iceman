@@ -1,5 +1,6 @@
 export deleteConversation from './deleteConversation'
 export getAllConversations from './getAllConversations'
 export getConversation from './getConversation'
+export getUnreadConversationCount from './getUnreadConversationCount'
 export setDeleteFlag from './setDeleteFlag'
 export updateConvoReadStatus from './updateConvoReadStatus'
