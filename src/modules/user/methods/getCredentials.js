@@ -1,5 +1,7 @@
 import AWS from 'aws-sdk'
-import s3Config from '../../../../s3Config'
+import secrets from '../../../../secrets'
+
+const s3Config = secrets.s3
 
 const getCredentials = (req, res, next) => {
   const { id } = req.user
