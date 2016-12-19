@@ -16,13 +16,13 @@ const register = (req, res, next) => {
     .then(salt => bcryptHash(password, salt, null))
     .then(hashedPassword => db.one('INSERT INTO ohhi_user(email, password, current_station) values($1, $2, $3) RETURNING id', [email, hashedPassword, current_station]))
       .then((record) => {
-        var client = new postmark.Client(secrets.postmark.key)
+        const client = new postmark.Client(secrets.postmark.key)
 
         const encryptedId = CryptoJS.AES.encrypt(record.id.toString(), secrets.crypto.idSalt)
 
         client.sendEmailWithTemplate({
           From: 'hi@oh-hi.us',
-          TemplateId: secrets.postmark.templateId,
+          TemplateId: secrets.postmark.activationTemplate,
           To: email,
           TemplateModel: {
             activationUrl: 'http://www.app.oh-hi.us/activate/' + encryptedId.toString()
