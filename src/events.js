@@ -2,7 +2,6 @@ let clients = {}
 
 const events = (io) => {
   io.on('connection', (socket) => {
-
     socket.on('user-connected', user => {
       clients[user] = socket.id
     })
@@ -31,14 +30,14 @@ const events = (io) => {
       socket.broadcast.emit('new socket conversation', conversation)
     })
 
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function () {
       for (var user in clients) {
         if (clients[user] === socket.id) {
           delete clients[user]
 
           break
         }
-      } 
+      }
     })
   })
 }

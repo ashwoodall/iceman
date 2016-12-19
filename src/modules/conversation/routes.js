@@ -1,9 +1,9 @@
-import { 
-  deleteConversation, 
-  getAllConversations, 
-  getConversation, 
-  getUnreadConversationCount, 
-  setDeleteFlag, 
+import {
+  deleteConversation,
+  getAllConversations,
+  getConversation,
+  getUnreadConversationCount,
+  setDeleteFlag,
   updateConvoReadStatus } from './methods'
 
 const routes = (app, passport) => {
