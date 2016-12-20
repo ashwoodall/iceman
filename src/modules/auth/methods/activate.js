@@ -6,7 +6,8 @@ import secrets from '../../../../secrets'
 const activate = (req, res, next) => {
   const { encryptedId } = req.body
 
-  const bytes = CryptoJS.AES.decrypt(encryptedId, secrets.crypto.idSalt)
+  const decodedId = decodeURIComponent(encryptedId)
+  const bytes = CryptoJS.AES.decrypt(decodedId, secrets.crypto.idSalt)
   const id = Number(bytes.toString(CryptoJS.enc.Utf8))
 
   return db.any('UPDATE ohhi_user SET is_activated = true WHERE id = $1 RETURNING *', [id])

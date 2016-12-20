@@ -18,6 +18,8 @@ const register = (req, res, next) => {
       .then((record) => {
         const client = new postmark.Client(secrets.postmark.key)
 
+        console.log(record)
+
         const encryptedId = CryptoJS.AES.encrypt(record.id.toString(), secrets.crypto.idSalt)
 
         client.sendEmailWithTemplate({
@@ -25,7 +27,7 @@ const register = (req, res, next) => {
           TemplateId: secrets.postmark.activationTemplate,
           To: email,
           TemplateModel: {
-            activationUrl: 'http://www.app.oh-hi.us/activate?encoded=' + encryptedId.toString()
+            activationUrl: `http://www.app.oh-hi.us/activate?encoded=${encodeURIComponent(encryptedId.toString())}`
           }
         })
       })

@@ -18,7 +18,7 @@ const forgotPassword = (req, res, next) => {
         TemplateId: secrets.postmark.forgotTemplate,
         To: email,
         TemplateModel: {
-          resetUrl: 'http://www.app.oh-hi.us/reset/' + token
+          resetUrl: `http://www.app.oh-hi.us/reset/${token}`
         }
       })
     })
