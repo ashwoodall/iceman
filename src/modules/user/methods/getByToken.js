@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken'
 
-import config from '../../../../config'
+import secrets from '../../../../secrets'
 import db from '../../../core/db'
 
 const getByToken = (req, res, next) => {
   const { authorization } = req.headers
 
-  jwt.verify(authorization.substring(4), config.secret, (err, user) => {
+  jwt.verify(authorization.substring(4), secrets.jwt, (err, user) => {
     if (err) throw err
 
     return db.tx(transaction => {

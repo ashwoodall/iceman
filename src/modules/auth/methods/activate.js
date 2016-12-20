@@ -9,8 +9,8 @@ const activate = (req, res, next) => {
   const bytes = CryptoJS.AES.decrypt(encryptedId, secrets.crypto.idSalt)
   const id = Number(bytes.toString(CryptoJS.enc.Utf8))
 
-  return db.any('UPDATE ohhi_user SET is_activated = true WHERE id = $1', [id])
-    .then(() => res.status(200).json({ message: 'Account activation successful!', success: true }))
+  return db.any('UPDATE ohhi_user SET is_activated = true WHERE id = $1 RETURNING *', [id])
+    .then(data => res.status(200).json({ message: 'Account activation successful!', success: true }))
     .catch(error => {
       res.status(400).json({ success: false, message: 'Failed to activate account.' })
 
