@@ -6,8 +6,7 @@ const NODE_ENV = JSON.stringify(process.env.NODE_ENV)
 
 const config = {
   port     : process.env.PORT || '8080',
-  host     : process.env.HOST || 'localhost',
-  secret   : process.env.SECRET || 'thisisdangerous'
+  host     : process.env.HOST || 'localhost'
 }
 
 config.db = {

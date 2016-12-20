@@ -1,11 +1,11 @@
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
-import config from '../../config'
+import secrets from '../../secrets'
 import db from './db'
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeader(),
-  secretOrKey: config.secret
+  secretOrKey: secrets.jwt
 }
 
 const jwtStrategy = (passport) => {
