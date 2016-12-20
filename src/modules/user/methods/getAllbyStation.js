@@ -4,7 +4,7 @@ const getAllbyStation = (req, res, next) => {
   const { station } = req.params
   const { id } = req.user
 
-  db.many('SELECT first_name, last_name, id, birth_date, completed_profile, profile_picture, introduction FROM ohhi_user WHERE current_station=$1 AND is_activated = true AND completed_profile = true AND disabled = false', [station])
+  db.any('SELECT first_name, last_name, id, birth_date, completed_profile, profile_picture, introduction FROM ohhi_user WHERE current_station=$1 AND is_activated = true AND completed_profile = true AND disabled = false', [station])
     .then(users => {
       let people = []
 
