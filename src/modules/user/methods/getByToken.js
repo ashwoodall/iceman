@@ -8,8 +8,7 @@ const getByToken = (req, res, next) => {
 
 
   jwt.verify(authorization.substring(4), secrets.jwt, (err, user) => {
-    console.log('here')
-    if (err) throw err
+    if (err) res.status(400).json({ success: false, message: 'Cannot find user!' })
 
     return db.tx(transaction => {
       const queries = [
