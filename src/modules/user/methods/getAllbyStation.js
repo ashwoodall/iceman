@@ -6,6 +6,8 @@ const getAllbyStation = (req, res, next) => {
 
   db.any('SELECT first_name, last_name, id, birth_date, completed_profile, profile_picture, introduction FROM ohhi_user WHERE current_station=$1 AND is_activated=$2 AND completed_profile=$3 AND disabled=$4', [station, true, true, false])
     .then(users => {
+
+      console.log(users)
       let people = []
 
       users.map(user => {
