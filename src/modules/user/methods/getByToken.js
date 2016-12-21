@@ -6,9 +6,8 @@ import db from '../../../core/db'
 const getByToken = (req, res, next) => {
   const { authorization } = req.headers
 
-
+  console.log(authorization)
   jwt.verify(authorization.substring(4), secrets.jwt, (err, user) => {
-    console.log('here')
     if (err) throw err
 
     return db.tx(transaction => {
