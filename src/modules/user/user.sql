@@ -22,7 +22,7 @@ CREATE TABLE ohhi_user(
   number_of_kids         SMALLINT,
   about_pets             TEXT,
   is_service_member      BOOLEAN,
-  is_activated          BOOLEAN NOT NULL DEFAULT FALSE,
+  is_activated           BOOLEAN NOT NULL DEFAULT FALSE,
   current_station        VARCHAR(255),
   prior_duty_stations    TEXT,
   facebook               VARCHAR(255),
@@ -30,5 +30,5 @@ CREATE TABLE ohhi_user(
   instagram              VARCHAR(255),
   pinterest              VARCHAR(255),
   completed_profile      BOOLEAN NOT NULL DEFAULT FALSE,
-  disabled               BOOLEAN
+  disabled               BOOLEAN NOT NULL DEFAULT FALSE
 );
