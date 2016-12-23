@@ -2,6 +2,7 @@
 import bodyParser from 'body-parser'
 import chalk from 'chalk'
 import express from 'express'
+import expressValidator from 'express-validator'
 import http from 'http'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -23,6 +24,7 @@ console.log(chalk.yellow('[express] Initializing server...'))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(expressValidator())
 app.use(morgan('dev'))
 
 const httpServer = http.createServer(app)

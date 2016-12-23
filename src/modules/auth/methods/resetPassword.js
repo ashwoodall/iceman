@@ -4,6 +4,7 @@ import postmark from 'postmark'
 
 import db from '../../../core/db'
 import secrets from '../../../../secrets'
+import { resetSchema } from '../validation/validationSchemas'
 
 const bcryptHash = Promise.promisify(hash)
 
@@ -11,6 +12,14 @@ const resetPassword = (req, res, next) => {
   const { password } = req.body
   const { token } = req.params
   const now = Date.now()
+
+  // Validate payload
+  req.checkBody(resetSchema)
+  const errors = req.validationErrors()
+
+  if (errors) {
+    return res.status(400).json(errors)
+  }
 
   return bcryptHash(password, 15)
     .then(hashedPassword => db.any('UPDATE ohhi_user SET password = $1, reset_password_token = null, reset_token_expiration = null WHERE reset_password_token = $2 AND reset_token_expiration > $3 RETURNING email', [hashedPassword, token, now]))

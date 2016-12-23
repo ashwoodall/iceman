@@ -5,11 +5,20 @@ import CryptoJS from 'crypto-js'
 
 import db from '../../../core/db'
 import secrets from '../../../../secrets'
+import { registrationSchema } from '../validation/validationSchemas'
 
 const bcryptHash = Promise.promisify(hash)
 
 const register = (req, res, next) => {
   const { current_station, email, password } = req.body
+
+  // Validate payload
+  req.checkBody(registrationSchema)
+  const errors = req.validationErrors()
+
+  if (errors) {
+    return res.status(400).json(errors)
+  }
 
   return bcryptHash(password, 12)
     .then(hashedPassword => db.one('INSERT INTO ohhi_user(email, password, current_station) values($1, $2, $3) RETURNING id', [email, hashedPassword, current_station]))
