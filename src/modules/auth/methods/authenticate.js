@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { compare } from 'bcrypt-nodejs'
+import { compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 import secrets from '../../../../secrets'
@@ -14,11 +14,13 @@ const comparePasswords = (password, hash) => {
 }
 
 const generateJwt = (id) => {
-  return jwt.sign(id, secrets.jwt)
+  console.log('id: ', id)
+  return jwt.sign({ id: id }, secrets.jwt, { expiresIn: '1h' })
 }
 
 const login = (req, res, next) => {
   let userInfo = null
+  let passwordMatch = null
 
   const { email, password } = req.body
 
@@ -28,7 +30,11 @@ const login = (req, res, next) => {
       return comparePasswords(password, user.password)
     })
     .then(match => {
-      if (!match) {
+      passwordMatch = match
+    })
+    .delay(750)
+    .then(() => {
+      if (!passwordMatch) {
         res.status(401).json({ message: 'Email or password is incorrect', success: false })
       } else {
         delete userInfo.password

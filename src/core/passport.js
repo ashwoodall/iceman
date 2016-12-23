@@ -10,7 +10,7 @@ const options = {
 
 const jwtStrategy = (passport) => {
   passport.use(new Strategy(options, (payload, done) => {
-    db.one('SELECT id from ohhi_user where id=$1', [payload])
+    db.one('SELECT id from ohhi_user where id=$1', [payload.id])
       .then(user => {
         if (user) return done(null, user)
 

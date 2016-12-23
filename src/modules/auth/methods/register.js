@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { hash, genSalt } from 'bcrypt-nodejs'
+import { hash } from 'bcrypt'
 import postmark from 'postmark'
 import CryptoJS from 'crypto-js'
 
@@ -7,15 +7,14 @@ import db from '../../../core/db'
 import secrets from '../../../../secrets'
 
 const bcryptHash = Promise.promisify(hash)
-const bcryptSalt = Promise.promisify(genSalt)
 
 const register = (req, res, next) => {
   const { current_station, email, password } = req.body
 
-  return bcryptSalt(10)
-    .then(salt => bcryptHash(password, salt, null))
+  return bcryptHash(password, 12)
     .then(hashedPassword => db.one('INSERT INTO ohhi_user(email, password, current_station) values($1, $2, $3) RETURNING id', [email, hashedPassword, current_station]))
     .then(record => {
+      console.log('record: ', record)
       const client = new postmark.Client(secrets.postmark.key)
       const encryptedId = CryptoJS.AES.encrypt(record.id.toString(), secrets.crypto.idSalt)
 
