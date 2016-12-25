@@ -5,7 +5,7 @@ const BASE = path.resolve(__dirname, '..')
 const NODE_ENV = JSON.stringify(process.env.NODE_ENV)
 
 const config = {
-  port     : process.env.PORT || '8080',
+  port     : process.env.PORT || '3000',
   host     : process.env.HOST || 'localhost'
 }
 
