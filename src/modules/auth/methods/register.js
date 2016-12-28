@@ -23,7 +23,6 @@ const register = (req, res, next) => {
   return bcryptHash(password, 12)
     .then(hashedPassword => db.one('INSERT INTO ohhi_user(email, password, current_station) values($1, $2, $3) RETURNING id', [email, hashedPassword, current_station]))
     .then(record => {
-      console.log('record: ', record)
       const client = new postmark.Client(secrets.postmark.key)
       const encryptedId = CryptoJS.AES.encrypt(record.id.toString(), secrets.crypto.idSalt)
 

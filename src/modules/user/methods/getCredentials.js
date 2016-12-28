@@ -26,7 +26,6 @@ const getCredentials = (req, res, next) => {
 
   s3.getSignedUrl('putObject', s3Params, (error, data) => {
     if (error) {
-      console.log(error)
       res.status(400).json({ success: false, message: 'Failed to generate S3 credentials!' })
       return next(error)
     }
