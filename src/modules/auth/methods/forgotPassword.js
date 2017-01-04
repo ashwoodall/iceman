@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import postmark from 'postmark'
-import { forgotPasswordSchema } from '../validation/validationSchemas'
+import { forgotPasswordSchema } from '../../validation'
 
 import db from '../../../core/db'
 import secrets from '../../../../secrets'

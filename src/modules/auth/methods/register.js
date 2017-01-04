@@ -5,7 +5,7 @@ import CryptoJS from 'crypto-js'
 
 import db from '../../../core/db'
 import secrets from '../../../../secrets'
-import { registrationSchema } from '../validation/validationSchemas'
+import { registrationSchema } from '../../validation'
 
 const bcryptHash = Promise.promisify(hash)
 

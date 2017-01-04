@@ -4,7 +4,7 @@ import postmark from 'postmark'
 
 import db from '../../../core/db'
 import secrets from '../../../../secrets'
-import { resetSchema } from '../validation/validationSchemas'
+import { resetSchema } from '../../validation'
 
 const bcryptHash = Promise.promisify(hash)
 

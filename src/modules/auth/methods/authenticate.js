@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import secrets from '../../../../secrets'
 import db from '../../../core/db'
-import { authenticationSchema } from '../validation/validationSchemas'
+import { authenticationSchema } from '../../validation'
 
 const bcryptCompare = Promise.promisify(compare)
 
