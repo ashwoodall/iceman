@@ -1,20 +1,27 @@
 import Promise from 'bluebird'
-import { hash, genSalt } from 'bcrypt-nodejs'
+import { hash } from 'bcrypt'
 import postmark from 'postmark'
 
 import db from '../../../core/db'
 import secrets from '../../../../secrets'
+import { resetSchema } from '../../validation'
 
 const bcryptHash = Promise.promisify(hash)
-const bcryptSalt = Promise.promisify(genSalt)
 
 const resetPassword = (req, res, next) => {
   const { password } = req.body
   const { token } = req.params
   const now = Date.now()
 
-  return bcryptSalt(10)
-    .then(salt => bcryptHash(password, salt, null))
+  // Validate payload
+  req.checkBody(resetSchema)
+  const errors = req.validationErrors()
+
+  if (errors) {
+    return res.status(400).json(errors)
+  }
+
+  return bcryptHash(password, 15)
     .then(hashedPassword => db.any('UPDATE ohhi_user SET password = $1, reset_password_token = null, reset_token_expiration = null WHERE reset_password_token = $2 AND reset_token_expiration > $3 RETURNING email', [hashedPassword, token, now]))
     .then(record => {
       const client = new postmark.Client(secrets.postmark.key)

@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import postmark from 'postmark'
+import { forgotPasswordSchema } from '../../validation'
 
 import db from '../../../core/db'
 import secrets from '../../../../secrets'
@@ -8,6 +9,14 @@ const forgotPassword = (req, res, next) => {
   const { email } = req.body
   const token = crypto.randomBytes(20).toString('hex')
   const tokenExpiration = Date.now() + 3600000
+
+  // Validate payload
+  req.checkBody(forgotPasswordSchema)
+  const errors = req.validationErrors()
+
+  if (errors) {
+    return res.status(400).json(errors)
+  }
 
   return db.any('UPDATE ohhi_user SET reset_password_token = $1, reset_token_expiration = $2 WHERE email = $3 RETURNING id', [token, tokenExpiration, email])
     .then(() => {

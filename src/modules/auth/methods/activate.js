@@ -6,6 +6,14 @@ import secrets from '../../../../secrets'
 const activate = (req, res, next) => {
   const { encryptedId } = req.body
 
+  // Validate payload
+  req.checkBody('encryptedId', 'Must include encryptedId').notEmpty()
+  const errors = req.validationErrors()
+
+  if (errors) {
+    return res.status(400).json(errors)
+  }
+
   const decodedId = decodeURIComponent(encryptedId)
   const bytes = CryptoJS.AES.decrypt(decodedId, secrets.crypto.idSalt)
   const id = Number(bytes.toString(CryptoJS.enc.Utf8))

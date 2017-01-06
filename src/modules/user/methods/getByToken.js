@@ -6,7 +6,6 @@ import db from '../../../core/db'
 const getByToken = (req, res, next) => {
   const { authorization } = req.headers
 
-
   jwt.verify(authorization.substring(4), secrets.jwt, (err, user) => {
     if (err) res.status(400).json({ success: false, message: 'Cannot find user!' })
 
