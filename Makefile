@@ -121,7 +121,7 @@ setup-db-linux:
 
 	@echo "Populating activity and kids_age lookup tables"
 	sudo -u $(USER) $(PSQL) $(DB) -c "INSERT INTO ohhi_activity (activity_label) VALUES ('Go for a walk'), ('Grab lunch or dinner'), ('Go shopping together'), ('Play date with the kids'), ('Play date with the dogs'), ('Volunteering'), ('Grab coffee or a drink'), ('Workout together'), ('Go to a party'), ('Attend a community event');"
-	sudo -u $(USER) $(PSQL) $(DB) -c "INSERT INTO ohhi_kids_age (kids_age_label) VALUES ('Infant'), ('Toddler'), ('Pre-K'), ('Elementary School'), ('Middle School'), ('High School'), ('College'), ('Adult');"
+	sudo -u $(USER) $(PSQL) $(DB) -c "INSERT INTO ohhi_kids_age (kids_age_label) VALUES ('Bun in the Oven'), ('Infant'), ('Toddler'), ('Pre-K'), ('Elementary School'), ('Middle School'), ('High School'), ('College'), ('Adult');"
 
 
 
