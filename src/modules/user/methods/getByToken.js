@@ -9,13 +9,11 @@ const getByToken = (req, res, next) => {
   jwt.verify(authorization.substring(4), secrets.jwt, (err, user) => {
     if (err) res.status(400).json({ success: false, message: 'Cannot find user!' })
 
-    console.log(user)
-
     return db.tx(transaction => {
       const queries = [
-        transaction.one('SELECT first_name, last_name, birth_date, id, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest, completed_profile, disabled from ohhi_user WHERE id=$1', [user]),
-        transaction.query('SELECT kids_age_label FROM ohhi_user_kids_age LEFT JOIN ohhi_kids_age ON ohhi_kids_age.id = ohhi_user_kids_age.kids_age_id where ohhi_user_kids_age.user_id=$1', [user]),
-        transaction.query('SELECT activity_label FROM ohhi_user_activity LEFT JOIN ohhi_activity ON ohhi_activity.id = ohhi_user_activity.activity_id where ohhi_user_activity.user_id=$1', [user])
+        transaction.one('SELECT first_name, last_name, birth_date, id, hometown, profile_picture, introduction, has_kids, has_pets, number_of_kids, about_pets, is_service_member, current_station, facebook, twitter, instagram, pinterest, completed_profile, disabled from ohhi_user WHERE id=$1', [user.id]),
+        transaction.query('SELECT kids_age_label FROM ohhi_user_kids_age LEFT JOIN ohhi_kids_age ON ohhi_kids_age.id = ohhi_user_kids_age.kids_age_id where ohhi_user_kids_age.user_id=$1', [user.id]),
+        transaction.query('SELECT activity_label FROM ohhi_user_activity LEFT JOIN ohhi_activity ON ohhi_activity.id = ohhi_user_activity.activity_id where ohhi_user_activity.user_id=$1', [user.id])
       ]
 
       return transaction.batch(queries)
